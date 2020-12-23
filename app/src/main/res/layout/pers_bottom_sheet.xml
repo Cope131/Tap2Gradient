@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/persBottomSheet"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/pers_bottom_sheet_bg"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_peekHeight="200dp"
+    app:behavior_hideable="false">
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        app:singleSelection="true"
+        app:chipSpacingHorizontal="20dp">
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.App.Chip"
+            android:id="@+id/color1Chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Color 1"
+            android:checked="true"/>
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.App.Chip"
+            android:id="@+id/color2Chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Color 2"/>
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <TextView
+        android:id="@+id/colorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Gradient"
+        android:textSize="20dp"
+        android:layout_margin="15dp"/>
+
+    <LinearLayout
+        android:id="@+id/gradientBox"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>
