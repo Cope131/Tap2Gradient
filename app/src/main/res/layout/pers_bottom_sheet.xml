@@ -2,59 +2,142 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/persBottomSheet"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     android:background="@drawable/pers_bottom_sheet_bg"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp"
+    app:behavior_hideable="false"
     app:behavior_peekHeight="200dp"
-    app:behavior_hideable="false">
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/colorsChipGroup"
-        android:layout_height="wrap_content"
+    <!-- Button for Dragging -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/draggableButton"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="25dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/draggable_button" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:padding="10dp"
-        app:singleSelection="true"
-        app:checkedChip="@+id/color1Chip"
-        app:chipSpacingHorizontal="20dp">
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.App.Chip"
-            android:id="@+id/color1Chip"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Color 1"/>
-        <com.google.android.material.chip.Chip
-            style="@style/Widget.App.Chip"
-            android:id="@+id/color2Chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Color 2"/>
-    </com.google.android.material.chip.ChipGroup>
+            android:orientation="vertical">
+
+            <!-- Colors Chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/colorsChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:checkedChip="@+id/color1Chip"
+                app:chipSpacingHorizontal="20dp"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/color1Chip"
+                    style="@style/Widget.App.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Color 1" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/color2Chip"
+                    style="@style/Widget.App.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Color 2" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Gradient Text -->
+
+            <!-- Gradient Box -->
+            <TextView
+                style="@style/Text.Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gradient"
+                android:textFontWeight="300" />
+
+            <LinearLayout
+                android:id="@+id/gradientBox"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <!-- Shade Text -->
+            <TextView
+                style="@style/Text.Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lightness"
+                android:textFontWeight="300" />
+
+            <!-- Shade Sliders -->
+            <!-- : Color 1-->
+            <TextView
+                style="@style/Text.Color.Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Color 1"
+                android:textFontWeight="300" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/color1Slider"
+                    style="@style/Widget.App.Slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- : Color 1-->
+            <TextView
+                style="@style/Text.Color.Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Color 2"
+                android:textFontWeight="300" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/color2Slider"
+                    style="@style/Widget.App.Slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/colorDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/colorTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="Gradient"
-        android:textSize="20dp"
-        android:layout_margin="15dp"/>
-
-    <LinearLayout
-        android:id="@+id/gradientBox"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="horizontal"
-        android:background="@color/white">
-
-    </LinearLayout>
+        </LinearLayout>
 
 
 
-
-
+    </ScrollView>
 
 </LinearLayout>

@@ -8,12 +8,14 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!-- Live Camera Feed -->
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
+    <!-- Persistent Bottom Sheet -->
     <include layout="@layout/pers_bottom_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

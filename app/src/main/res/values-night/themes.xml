@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-
+    <!-- Chip Style -->
     <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="android:textColor">@color/text_color</item>
 
@@ -27,6 +27,42 @@
         <item name="chipMinHeight">70dp</item>
         <item name="chipEndPadding">15dp</item>
         <item name="chipStartPadding">15dp</item>
+    </style>
+
+    <!-- Header Style -->
+    <style name="Text.Header" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <!-- Slider Style -->
+    <style name="Widget.App.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="thumbColor">@color/black</item>
+        <item name="trackColorActive">@color/black</item>
+        <item name="labelStyle">@style/Label.Tooltip</item>
+
+        <item name="android:valueFrom">0</item>
+        <item name="android:valueTo">100</item>
+        <item name="android:value">100</item>
+        <item name="android:layout_marginRight">15dp</item>
+    </style>
+
+    <style name="Label.Tooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="backgroundTint">@color/black</item>
+        <item name="android:textAppearance">@style/Label.Text.Tooltip</item>
+    </style>
+
+    <style name="Label.Text.Tooltip" parent="TextAppearance.MaterialComponents.Tooltip">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Header Color Style -->
+    <style name="Text.Color.Header" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black_light</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
     </style>
 
 </resources>

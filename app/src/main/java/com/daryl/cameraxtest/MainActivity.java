@@ -29,13 +29,16 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.slider.Slider;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -64,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Views
     private PreviewView viewFinder;
-    private TextView textView;
     private LinearLayout gradientBox;
 
     private LinearLayout persBottomSheet;
@@ -73,8 +75,12 @@ public class MainActivity extends AppCompatActivity {
     private ChipGroup colorsChipGroup;
     private Chip color1Chip;
     private Chip color2Chip;
-
     private int selectedChipId;
+
+    private Slider color1Slider;
+    private Slider color2Slider;
+
+    private LinearLayout colorDisplay;
 
     View.OnTouchListener onTouchListener;
 
@@ -103,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Init Views
         viewFinder = findViewById(R.id.viewFinder);
-        textView = findViewById(R.id.colorTextView);
         gradientBox = findViewById(R.id.gradientBox);
 
         persBottomSheet = findViewById(R.id.persBottomSheet);
@@ -115,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
         selectedChipId = color1Chip.getId(); // Selected by Default
 
+        color1Slider = findViewById(R.id.color1Slider);
+        color2Slider = findViewById(R.id.color2Slider);
+
+        colorDisplay = findViewById(R.id.colorDisplay);
+
+        // Bottom Sheet Behaviour
+        sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
 
         // Request Camera Permission If Not Granted
         if (allPermissionsGranted()) {
@@ -128,77 +140,65 @@ public class MainActivity extends AppCompatActivity {
         // Pixel Selected
         onTouchListener = (view, motionEvent) -> {
 
-            // selected x and y coordinates
-            int x = (int) motionEvent.getX();
-            int y = (int) motionEvent.getY();
+            if (motionEvent.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                // Toast.makeText(getApplicationContext(), "onTouch Down - Camera", Toast.LENGTH_SHORT).show();
+                // selected x and y coordinates
+                int x = (int) motionEvent.getX();
+                int y = (int) motionEvent.getY();
 
-            // get RGB values of that (x, y) pixel
-            if (matFrame != null) {
-                double[] rgbValues = matFrame.get(y, x);
-                Log.d(TAG, "RGB of Selected Row and Col: " + Arrays.toString(rgbValues));
+                // get RGB values of that (x, y) pixel
+                if (matFrame != null) {
+                    double[] rgbValues = matFrame.get(y, x);
+                    Log.d(TAG, "RGB of Selected Row and Col: " + Arrays.toString(rgbValues));
 
-                int valueR = (int) rgbValues[0];
-                int valueG = (int) rgbValues[1];
-                int valueB = (int) rgbValues[2];
-                Log.d(TAG, "R G B: " + valueR + " " + valueG + " " + valueB);
+                    int valueR = (int) rgbValues[0];
+                    int valueG = (int) rgbValues[1];
+                    int valueB = (int) rgbValues[2];
+                    Log.d(TAG, "R G B: " + valueR + " " + valueG + " " + valueB);
 
-                int color = Color.rgb(valueR, valueG, valueB);
+                    int color = Color.rgb(valueR, valueG, valueB);
 
-                // store to color 1 or 2 according to which is selected
-                if (selectedChipId == color1Chip.getId())
-                    color1 = color;
-                else if (selectedChipId == color2Chip.getId())
-                    color2 = color;
+                    // store to color 1 or 2 according to which is selected
+                    if (selectedChipId == color1Chip.getId())
+                        color1 = color;
+                    else if (selectedChipId == color2Chip.getId())
+                        color2 = color;
 
-                Toast.makeText(getApplicationContext(), "color1: " + color1 + "\ncolor2: " + color2, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "color1: " + color1 + "\ncolor2: " + color2, Toast.LENGTH_SHORT).show();
 
-                // display color using text
-                int[] colors = {color1, color2};
-                GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                    // display color using text
+                    int[] colors = {color1, color2};
+                    GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                    gradientBox.setBackground(gradientDrawable);
 
-//                if (gradientDrawable == null)
-//                    Toast.makeText(getApplicationContext(), "drawable is null", Toast.LENGTH_SHORT).show();
-//                else
-//                    Toast.makeText(getApplicationContext(), "drawable is not null", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "matFrame is Null: ");
+                }
 
-//                textView.setTextColor(gradientDrawable.getColor());
-                gradientBox.setBackground(gradientDrawable);
-
-            } else {
-                Log.d(TAG, "matFrame is Null: ");
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
             }
-            return false;
+
+            return true;
         };
         viewFinder.setOnTouchListener(onTouchListener);
 
-        // Bottom Sheet Interacted
-//        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-//                    // disable camera on touch
-//                    viewFinder.setOnTouchListener(null);
-//                    Toast.makeText(getApplicationContext(), "onStateChanged Called - Dragging", Toast.LENGTH_SHORT).show();
-//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    // enable camera on touch
-//                    viewFinder.setOnTouchListener(onTouchListener);
-//                    Toast.makeText(getApplicationContext(), "onStateChanged Called - Collapsed", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//            }
-//        });
-
-        // Bottom Sheet
-        persBottomSheet.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                // prevent parent from touching the camera view (viewfinder)
-                viewFinder.requestDisallowInterceptTouchEvent(true);
-                Toast.makeText(getApplicationContext(), "parent of persBottomSheet" + persBottomSheet.getParent(), Toast.LENGTH_SHORT).show();
-                return false;
+        // Bottom Sheet Selected or Swiped
+        persBottomSheet.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                // disable view finder on touch
+                viewFinder.setOnTouchListener(null);
+                // Toast.makeText(getApplicationContext(), "On Touch Down - Sheet", Toast.LENGTH_SHORT).show();
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                // enable view finder on touch
+                viewFinder.setOnTouchListener(onTouchListener);
+                // Toast.makeText(getApplicationContext(), "On Touch Up - Sheet", Toast.LENGTH_SHORT).show();
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+                // enable view finder on touch
+                viewFinder.setOnTouchListener(onTouchListener);
+                // Toast.makeText(getApplicationContext(), "On Touch Cancel - Sheet", Toast.LENGTH_SHORT).show();
             }
+            return true;
         });
 
         // Chip Selected
@@ -206,6 +206,75 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Checked ID" + checkedId, Toast.LENGTH_SHORT).show();
             selectedChipId = checkedId;
         });
+
+        // Slider 1 Selected
+        color1Slider.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                // Toast.makeText(getApplicationContext(), "onValueChange called - Slider", Toast.LENGTH_SHORT).show();
+
+                // get HSV values of RGB color
+                int red = Color.red(color1);
+                int green = Color.green(color1);
+                int blue = Color.blue(color1);
+                float[] hsv = new float[3];
+                Color.RGBToHSV(red, green, blue, hsv);
+                Log.d(TAG, "HSV of Color" + Arrays.toString(hsv));
+
+                // change v (lightness) according to value of slider
+                hsv[2] = value/100;
+                Log.d(TAG, "Modified HSV of Color" + Arrays.toString(hsv));
+
+                // convert hsv to color
+                int color1New = Color.HSVToColor(hsv);
+                Log.d(TAG, "RGB Color 1 (int)" + color1);
+                Log.d(TAG, "New RGB Color 1 (int)" + color1New);
+
+                color1 = color1New;
+
+                // update gradient
+                // colorDisplay.setBackgroundColor(color1New);
+                int[] colors = {color1New, color2};
+                GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                gradientBox.setBackground(gradientDrawable);
+
+            }
+        });
+
+        // Slider 2 Selected
+        color2Slider.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                // Toast.makeText(getApplicationContext(), "onValueChange called - Slider", Toast.LENGTH_SHORT).show();
+
+                // get HSV values of RGB color
+                int red = Color.red(color2);
+                int green = Color.green(color2);
+                int blue = Color.blue(color2);
+                float[] hsv = new float[3];
+                Color.RGBToHSV(red, green, blue, hsv);
+                Log.d(TAG, "HSV of Color" + Arrays.toString(hsv));
+
+                // change v (lightness) according to value of slider
+                hsv[2] = value/100;
+                Log.d(TAG, "Modified HSV of Color" + Arrays.toString(hsv));
+
+                // convert hsv to color
+                int color2New = Color.HSVToColor(hsv);
+                Log.d(TAG, "RGB Color 2 (int)" + color2);
+                Log.d(TAG, "New RGB Color 2 (int)" + color2New);
+
+                color2 = color2New;
+
+                // update gradient
+                // colorDisplay.setBackgroundColor(color1New);
+                int[] colors = {color1, color2New};
+                GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                gradientBox.setBackground(gradientDrawable);
+
+            }
+        });
+
 
     } // - end -
 
