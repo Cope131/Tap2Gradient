@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -170,6 +171,17 @@ public class MainActivity extends AppCompatActivity {
                     int[] colors = {color1, color2};
                     GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
                     gradientBox.setBackground(gradientDrawable);
+
+                    // update slider for lightness of the color
+                    float[] hsv = new float[3];
+                    Color.RGBToHSV(valueR, valueG, valueB, hsv);
+                    float v = hsv[2]*100;
+
+                    if (selectedChipId == color1Chip.getId())
+                        color1Slider.setValue(v);
+                    else if (selectedChipId == color2Chip.getId())
+                        color2Slider.setValue(v);
+
 
                 } else {
                     Log.d(TAG, "matFrame is Null: ");

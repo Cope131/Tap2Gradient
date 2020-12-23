@@ -72,17 +72,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal" />
 
-            </LinearLayout>
-
-            <!-- Shade Text -->
+            <!-- Lightness Text -->
             <TextView
                 style="@style/Text.Header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Lightness"
-                android:textFontWeight="300" />
+                android:textFontWeight="300"
+                android:layout_marginTop="30dp"/>
 
             <!-- Shade Sliders -->
             <!-- : Color 1-->
@@ -97,7 +96,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <com.google.android.material.slider.Slider
                     android:id="@+id/color1Slider"
                     style="@style/Widget.App.Slider"
