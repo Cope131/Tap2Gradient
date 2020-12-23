@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -67,15 +70,24 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout persBottomSheet;
     private BottomSheetBehavior sheetBehavior;
 
-    View.OnTouchListener onTouchListener;
+    private ChipGroup colorsChipGroup;
+    private Chip color1Chip;
+    private Chip color2Chip;
 
+    private int selectedChipId;
+
+    View.OnTouchListener onTouchListener;
 
     private ExecutorService cameraExecutor;
 
     // Frame Matrix
-    Mat matFrame;
+    private Mat matFrame;
 
-    // check openCV
+    // Selected Colors
+    private int color1;
+    private int color2;
+
+    // Check OpenCV
     static {
         if (OpenCVLoader.initDebug())
             Log.d(TAG, "OpenCV installed successfully");
@@ -97,7 +109,14 @@ public class MainActivity extends AppCompatActivity {
         persBottomSheet = findViewById(R.id.persBottomSheet);
         sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
 
-        // request camera permission if not granted
+        colorsChipGroup = findViewById(R.id.colorsChipGroup);
+        color1Chip = findViewById(R.id.color1Chip);
+        color2Chip = findViewById(R.id.color2Chip);
+
+        selectedChipId = color1Chip.getId(); // Selected by Default
+
+
+        // Request Camera Permission If Not Granted
         if (allPermissionsGranted()) {
             startCamera();
         } else {
@@ -108,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Pixel Selected
         onTouchListener = (view, motionEvent) -> {
+
             // selected x and y coordinates
             int x = (int) motionEvent.getX();
             int y = (int) motionEvent.getY();
@@ -122,37 +142,70 @@ public class MainActivity extends AppCompatActivity {
                 int valueB = (int) rgbValues[2];
                 Log.d(TAG, "R G B: " + valueR + " " + valueG + " " + valueB);
 
+                int color = Color.rgb(valueR, valueG, valueB);
+
+                // store to color 1 or 2 according to which is selected
+                if (selectedChipId == color1Chip.getId())
+                    color1 = color;
+                else if (selectedChipId == color2Chip.getId())
+                    color2 = color;
+
+                Toast.makeText(getApplicationContext(), "color1: " + color1 + "\ncolor2: " + color2, Toast.LENGTH_SHORT).show();
+
                 // display color using text
-                textView.setTextColor(Color.rgb(valueR, valueG, valueB));
-                gradientBox.setBackgroundColor(Color.rgb(valueR, valueG, valueB));
+                int[] colors = {color1, color2};
+                GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+
+//                if (gradientDrawable == null)
+//                    Toast.makeText(getApplicationContext(), "drawable is null", Toast.LENGTH_SHORT).show();
+//                else
+//                    Toast.makeText(getApplicationContext(), "drawable is not null", Toast.LENGTH_SHORT).show();
+
+//                textView.setTextColor(gradientDrawable.getColor());
+                gradientBox.setBackground(gradientDrawable);
 
             } else {
                 Log.d(TAG, "matFrame is Null: ");
             }
             return false;
         };
-
         viewFinder.setOnTouchListener(onTouchListener);
 
         // Bottom Sheet Interacted
-        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+//                    // disable camera on touch
+//                    viewFinder.setOnTouchListener(null);
+//                    Toast.makeText(getApplicationContext(), "onStateChanged Called - Dragging", Toast.LENGTH_SHORT).show();
+//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    // enable camera on touch
+//                    viewFinder.setOnTouchListener(onTouchListener);
+//                    Toast.makeText(getApplicationContext(), "onStateChanged Called - Collapsed", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//            }
+//        });
+
+        // Bottom Sheet
+        persBottomSheet.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    // disable camera on touch
-                    viewFinder.setOnTouchListener(null);
-                    //Toast.makeText(getApplicationContext(), "onStateChanged Called - Dragging", Toast.LENGTH_SHORT).show();
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    // enable camera on touch
-                    viewFinder.setOnTouchListener(onTouchListener);
-                    //Toast.makeText(getApplicationContext(), "onStateChanged Called - Collapsed", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                // prevent parent from touching the camera view (viewfinder)
+                viewFinder.requestDisallowInterceptTouchEvent(true);
+                Toast.makeText(getApplicationContext(), "parent of persBottomSheet" + persBottomSheet.getParent(), Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 
+        // Chip Selected
+        colorsChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            Toast.makeText(getApplicationContext(), "Checked ID" + checkedId, Toast.LENGTH_SHORT).show();
+            selectedChipId = checkedId;
+        });
 
     } // - end -
 

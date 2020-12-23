@@ -12,18 +12,19 @@
     app:behavior_hideable="false">
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/colorsChipGroup"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:padding="10dp"
         app:singleSelection="true"
+        app:checkedChip="@+id/color1Chip"
         app:chipSpacingHorizontal="20dp">
         <com.google.android.material.chip.Chip
             style="@style/Widget.App.Chip"
             android:id="@+id/color1Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Color 1"
-            android:checked="true"/>
+            android:text="Color 1"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.App.Chip"
             android:id="@+id/color2Chip"
