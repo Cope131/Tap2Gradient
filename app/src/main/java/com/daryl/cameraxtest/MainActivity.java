@@ -27,9 +27,11 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -53,6 +55,27 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "MainActivity";
+
+    private final int REQUEST_CODE_PERMISSIONS = 101;
+    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    // Views
+    private PreviewView viewFinder;
+    private TextView textView;
+    private LinearLayout gradientBox;
+
+    private LinearLayout persBottomSheet;
+    private BottomSheetBehavior sheetBehavior;
+
+    View.OnTouchListener onTouchListener;
+
+
+    private ExecutorService cameraExecutor;
+
+    // Frame Matrix
+    Mat matFrame;
+
+    // check openCV
     static {
         if (OpenCVLoader.initDebug())
             Log.d(TAG, "OpenCV installed successfully");
@@ -60,33 +83,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "OpenCV not installed");
     }
 
-    private final int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
-
-    PreviewView viewFinder;
-    FloatingActionButton btnCapture;
-    TextView textView;
-//    ImageView ivFrame;
-
-    private ExecutorService cameraExecutor;
-    ImageCapture imageCapture;
-
-    private final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
-
-    // RGB Image Matrix
-//    Mat matFrameRgba;
-    Mat matFrame;
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Init Views
         viewFinder = findViewById(R.id.viewFinder);
-        btnCapture = findViewById(R.id.btnCapture);
         textView = findViewById(R.id.colorTextView);
-//        ivFrame = findViewById(R.id.frameImageView);
+        gradientBox = findViewById(R.id.gradientBox);
+
+        persBottomSheet = findViewById(R.id.persBottomSheet);
+        sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
 
         // request camera permission if not granted
         if (allPermissionsGranted()) {
@@ -95,40 +104,57 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
 
-        btnCapture.setOnClickListener(view -> takePhoto());
-
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        // select pixel
-        viewFinder.setOnTouchListener((view, motionEvent) -> {
-
+        // Pixel Selected
+        onTouchListener = (view, motionEvent) -> {
             // selected x and y coordinates
             int x = (int) motionEvent.getX();
             int y = (int) motionEvent.getY();
 
             // get RGB values of that (x, y) pixel
-//            double[] rgbValues = matFrameRgba.get(y, x);
-            double[] rgbValues = matFrame.get(y, x);
-            Log.d(TAG, "RGB of Selected Row and Col: " + Arrays.toString(rgbValues));
+            if (matFrame != null) {
+                double[] rgbValues = matFrame.get(y, x);
+                Log.d(TAG, "RGB of Selected Row and Col: " + Arrays.toString(rgbValues));
 
-            int valueR = (int) rgbValues[0];
-            int valueG = (int) rgbValues[1];
-            int valueB = (int) rgbValues[2];
-            Log.d(TAG, "R G B: " + valueR + " " + valueG + " " + valueB);
+                int valueR = (int) rgbValues[0];
+                int valueG = (int) rgbValues[1];
+                int valueB = (int) rgbValues[2];
+                Log.d(TAG, "R G B: " + valueR + " " + valueG + " " + valueB);
 
-            // display color using text
-            textView.setTextColor(Color.rgb(valueR, valueG, valueB));
+                // display color using text
+                textView.setTextColor(Color.rgb(valueR, valueG, valueB));
+                gradientBox.setBackgroundColor(Color.rgb(valueR, valueG, valueB));
 
-            // display image
-//            Bitmap bitmap = Bitmap.createBitmap(matFrame.cols(), matFrame.rows(), Bitmap.Config.ARGB_8888);
-                // convert Matrix to Bitmap to display
-//            Utils.matToBitmap(matFrame, bitmap);
-//            ivFrame.setImageBitmap(bitmap);
-
+            } else {
+                Log.d(TAG, "matFrame is Null: ");
+            }
             return false;
+        };
+
+        viewFinder.setOnTouchListener(onTouchListener);
+
+        // Bottom Sheet Interacted
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    // disable camera on touch
+                    viewFinder.setOnTouchListener(null);
+                    //Toast.makeText(getApplicationContext(), "onStateChanged Called - Dragging", Toast.LENGTH_SHORT).show();
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    // enable camera on touch
+                    viewFinder.setOnTouchListener(onTouchListener);
+                    //Toast.makeText(getApplicationContext(), "onStateChanged Called - Collapsed", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
         });
 
-    } // end of onCreate() method
+
+    } // - end -
 
 
     private void startCamera() {
@@ -153,36 +179,25 @@ public class MainActivity extends AppCompatActivity {
                         .requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
                 preview.setSurfaceProvider(viewFinder.createSurfaceProvider());
 
-                // initialize image capture
-                imageCapture = new ImageCapture.Builder().build();
-
                 // Image Analyzer
                 ImageAnalysis imageAnalyzer = new ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // non-blocking mode
                         .build();
 
-                imageAnalyzer.setAnalyzer(cameraExecutor, new ImageAnalysis.Analyzer() {
-                    @Override
-                    public void analyze(@NonNull ImageProxy image) {
-                        Log.d(TAG, "Image Info: " + image.getImageInfo());
+                imageAnalyzer.setAnalyzer(cameraExecutor, image -> {
+                    Log.d(TAG, "Image Info: " + image.getImageInfo());
 
-                        // convert from bitmap to Matrix Frame to get RGB values
-                        final Bitmap bitmapFrame = viewFinder.getBitmap();
-                        matFrame = new Mat();
+                    // convert from bitmap to Matrix Frame to get RGB values
+                    final Bitmap bitmapFrame = viewFinder.getBitmap();
+                    matFrame = new Mat();
 
-                        if (bitmapFrame == null)
-                            return;
-                        Utils.bitmapToMat(bitmapFrame, matFrame);
+                    if (bitmapFrame == null)
+                        return;
+                    Utils.bitmapToMat(bitmapFrame, matFrame);
 
-                           // convert frame to rgb
-//                        matFrameRgba = new Mat();
-//                        Imgproc.cvtColor(matFrame, matFrameRgba, Imgproc.COLOR_);
+                    Log.d(TAG, "Mat Frame: " + matFrame);
 
-                        Log.d(TAG, "Mat Frame: " + matFrame);
-//                        Log.d(TAG, "Mat Frame RBA: " + matFrame);
-
-                        image.close();
-                    }
+                    image.close();
                 });
 
                 try {
@@ -193,48 +208,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         }, ContextCompat.getMainExecutor(this));
 
-    }
-
-//    private ImageAnalysis setImageAnalysis() {
-//    }
-//
-//    private ImageCapture setImageCapture() {
-//    }
-//
-//    private Preview setPreview() {
-//    }
-
-    private void takePhoto() {
-
-        // exit function when image
-        if (imageCapture == null)
-            return;
-
-        // image file
-        File photoFile = new File(getExternalFilesDir(getResources().getString(R.string.app_name)),
-                new SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()) + ".jpg");
-
-        ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-
-
-        imageCapture.takePicture(
-                outputOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
-                    // captured photo successfully - save the photo
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Uri savedUri = Uri.fromFile(photoFile);
-                        String message = "Photo capture succeeded: " + savedUri;
-                        Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, message);
-                    }
-
-                    // failed to capture photo - log error
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        Log.e(TAG, "Photo capture failed: ${exc.message}", exception);
-                    }
-                }
-        );
     }
 
     private boolean allPermissionsGranted() {

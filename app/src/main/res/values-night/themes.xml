@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CameraXTest" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.CameraXTest" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/gray</item>
+        <item name="colorPrimaryVariant">@color/gray</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -13,4 +13,20 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+
+    <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/text_color</item>
+
+        <item name="chipBackgroundColor">@color/white</item>
+
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/stroke_tint</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+
+        <item name="chipMinHeight">70dp</item>
+        <item name="chipEndPadding">15dp</item>
+        <item name="chipStartPadding">15dp</item>
+    </style>
+
 </resources>
