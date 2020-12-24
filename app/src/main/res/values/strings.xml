@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CameraX Test</string>
+
+    <string-array name="save_options">
+        <item>Gallery</item>
+        <item>Clipboard</item>
+    </string-array>
 </resources>

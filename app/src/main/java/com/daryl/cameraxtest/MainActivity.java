@@ -1,60 +1,44 @@
 package com.daryl.cameraxtest;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.TextureView;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,12 +48,16 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
 
     private final int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{
+            "android.permission.CAMERA",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
 
     // Views
     private PreviewView viewFinder;
     private LinearLayout gradientBox;
 
+    private ExtendedFloatingActionButton saveFAB;
     private LinearLayout persBottomSheet;
     private BottomSheetBehavior sheetBehavior;
 
@@ -112,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         viewFinder = findViewById(R.id.viewFinder);
         gradientBox = findViewById(R.id.gradientBox);
 
+        saveFAB = findViewById(R.id.saveFAB);
         persBottomSheet = findViewById(R.id.persBottomSheet);
         sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
 
@@ -287,6 +276,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Change Save Button Color Dynamically
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    Toast.makeText(getApplicationContext(), "Expanded / Half - Sheet", Toast.LENGTH_SHORT).show();
+                    saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
+                    saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
+                }  else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    Toast.makeText(getApplicationContext(), "Collapsed - Sheet", Toast.LENGTH_SHORT).show();
+                    saveFAB.setIconTintResource(R.color.save_icon_color);
+                    saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Log.d(TAG, "-----------------------------------" + slideOffset);
+                if (slideOffset > 0.8) {
+                    saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
+                    saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
+                } else if (slideOffset < 0.4) {
+                    saveFAB.setIconTintResource(R.color.save_icon_color);
+                    saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
+                }
+            }
+        });
+
+        // Save Button Clicked
+        saveFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSaveOptionsDialog();
+            }
+        });
+
 
     } // - end -
 
@@ -374,6 +399,71 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cameraExecutor.shutdown();
+    }
+
+    private void showSaveOptionsDialog() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this, R.style.Transparent_AlertDialog);
+        View view = MainActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
+        adb.setView(view);
+
+        // init views in dialog
+        Button okButton = view.findViewById(R.id.dialogOkButton);
+        Button cancelButton = view.findViewById(R.id.dialogCancelButton);
+        TextView color1ValuesTv = view.findViewById(R.id.color1ValuesDialogTextView);
+        TextView color2ValuesTv = view.findViewById(R.id.color2ValuesDialogTextView);
+        ChipGroup saveOptionsChip = view.findViewById(R.id.saveOptionsChipGroup);
+
+        // display color values
+        color1ValuesTv.setText(getColorValues(color1));
+        color2ValuesTv.setText(getColorValues(color2));
+
+        AlertDialog ad = adb.create();
+        ad.show();
+
+        // action
+        View.OnClickListener onClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.dialogOkButton:
+                        doSave();
+                        ad.dismiss();
+                        break;
+                    case R.id.dialogCancelButton:
+                        ad.dismiss();
+                        break;
+                }
+            }
+        };
+
+        okButton.setOnClickListener(onClick);
+        cancelButton.setOnClickListener(onClick);
+
+
+    }
+
+    private String getColorValues(int colorValue) {
+        String colorValues = "";
+
+        // hexadecimal
+        String hexValue = "#" + Integer.toHexString(colorValue).substring(2).toUpperCase();
+        // rgb
+        int red = Color.red(colorValue);
+        int green = Color.green(colorValue);
+        int blue = Color.blue(colorValue);
+        String rgbValue = String.format("%d, %d, %d", red, green, blue);
+        // hsv
+        float[] hsv = new float[3];
+        Color.RGBToHSV(red, green, blue, hsv);
+        String hsvValue =  String.format("%.0f, %.0f, %.0f", hsv[0], hsv[1]*100, hsv[2]*100);
+        // store
+        colorValues = String.format("Rgb: %s\nHex: %s\nHsv: %s", rgbValue, hexValue, hsvValue);
+
+        return colorValues;
+    }
+
+    private void doSave() {
+        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
     }
 
 }

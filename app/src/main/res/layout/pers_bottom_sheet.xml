@@ -40,21 +40,23 @@
                 android:padding="10dp"
                 app:checkedChip="@+id/color1Chip"
                 app:chipSpacingHorizontal="20dp"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                app:selectionRequired="true">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/color1Chip"
                     style="@style/Widget.App.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Color 1" />
+                    android:text="Color 1"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/color2Chip"
                     style="@style/Widget.App.Chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Color 2" />
+                    android:text="Color 2"/>
+
             </com.google.android.material.chip.ChipGroup>
 
             <!-- Gradient Text -->
@@ -72,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/white"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"/>
 
             <!-- Lightness Text -->
             <TextView
