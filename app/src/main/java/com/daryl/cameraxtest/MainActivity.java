@@ -12,6 +12,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -39,6 +42,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Slider color1Slider;
     private Slider color2Slider;
-
-    private LinearLayout colorDisplay;
 
     View.OnTouchListener onTouchListener;
 
@@ -113,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         color1Slider = findViewById(R.id.color1Slider);
         color2Slider = findViewById(R.id.color2Slider);
 
-        colorDisplay = findViewById(R.id.colorDisplay);
 
         // Bottom Sheet Behaviour
         sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
@@ -234,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
                 color1 = color1New;
 
                 // update gradient
-                // colorDisplay.setBackgroundColor(color1New);
                 int[] colors = {color1New, color2};
                 GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
                 gradientBox.setBackground(gradientDrawable);
@@ -268,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
                 color2 = color2New;
 
                 // update gradient
-                // colorDisplay.setBackgroundColor(color1New);
                 int[] colors = {color1, color2New};
                 GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
                 gradientBox.setBackground(gradientDrawable);
@@ -308,7 +307,10 @@ public class MainActivity extends AppCompatActivity {
         saveFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSaveOptionsDialog();
+                if (color1 != 0 && color2 != 0)
+                    showSaveOptionsDialog();
+                else
+                    Toast.makeText(getApplicationContext(), "Please select colors", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -411,11 +413,19 @@ public class MainActivity extends AppCompatActivity {
         Button cancelButton = view.findViewById(R.id.dialogCancelButton);
         TextView color1ValuesTv = view.findViewById(R.id.color1ValuesDialogTextView);
         TextView color2ValuesTv = view.findViewById(R.id.color2ValuesDialogTextView);
-        ChipGroup saveOptionsChip = view.findViewById(R.id.saveOptionsChipGroup);
+        ChipGroup saveOptionsChipGrp= view.findViewById(R.id.saveOptionsChipGroup);
+        LinearLayout gradientBoxDialog = view.findViewById(R.id.gradientBoxDialog);
 
         // display color values
-        color1ValuesTv.setText(getColorValues(color1));
-        color2ValuesTv.setText(getColorValues(color2));
+        String color1ValuesStr = getColorValues(color1);
+        String color2ValuesStr = getColorValues(color2);
+        color1ValuesTv.setText(color1ValuesStr);
+        color2ValuesTv.setText(color2ValuesStr);
+
+        // display gradient
+        int[] colors = {color1, color2};
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+        gradientBoxDialog.setBackground(gradientDrawable);
 
         AlertDialog ad = adb.create();
         ad.show();
@@ -426,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.dialogOkButton:
-                        doSave();
+                        doSave(saveOptionsChipGrp, color1ValuesStr + "\n" + color2ValuesStr);
                         ad.dismiss();
                         break;
                     case R.id.dialogCancelButton:
@@ -462,8 +472,19 @@ public class MainActivity extends AppCompatActivity {
         return colorValues;
     }
 
-    private void doSave() {
+    private void doSave(ChipGroup chipGroup, String text) {
         Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+        List<Integer> checkedIds = chipGroup.getCheckedChipIds();
+
+        if (checkedIds.contains(R.id.galleryCheckChip)) {
+            Toast.makeText(getApplicationContext(), "gallery selected", Toast.LENGTH_SHORT).show();
+        }
+        if (checkedIds.contains(R.id.clipboardCheckChip)) {
+            Toast.makeText(getApplicationContext(), "clipboard selected", Toast.LENGTH_SHORT).show();
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Gradient Color Values", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
 }
