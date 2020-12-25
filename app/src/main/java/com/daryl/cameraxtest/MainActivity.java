@@ -487,4 +487,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume called" );
+        // image analysis is called again
+        if (allPermissionsGranted()) {
+            startCamera();
+        }
+    }
 }
