@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CameraX Test</string>
+    <string name="app_name">Tap 2 Gradient</string>
 
     <string-array name="save_options">
         <item>Gallery</item>

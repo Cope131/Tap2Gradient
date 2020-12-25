@@ -1,4 +1,4 @@
-package com.daryl.cameraxtest;
+package com.daryl.tap2gradient;
 
 import android.content.Context;
 
