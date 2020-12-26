@@ -6,16 +6,35 @@
         <item name="colorPrimaryVariant">@color/gray</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
     </style>
 
+    <!-- FAB Style -->
+    <style name="Widget.FAB" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:text">Save</item>
+        <item name="android:textAppearance">@style/TextAppearance.Button</item>
+
+        <item name="borderWidth">1dp</item>
+        <item name="iconTint">@color/save_icon_color</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+
+        <item name="android:background">@null</item>
+        <item name="android:outlineProvider">none</item>
+        <item name="android:elevation">0dp</item>
+
+        <item name="icon">@drawable/save_icon</item>
+        <item name="iconSize">20dp</item>
+        <item name="iconPadding">10dp</item>
+    </style>
+
     <!-- Chip Style -->
     <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColor">@color/black_800</item>
 
         <item name="chipBackgroundColor">@color/white</item>
 
@@ -37,9 +56,13 @@
 
     <!-- Slider Style -->
     <style name="Widget.App.Slider" parent="Widget.MaterialComponents.Slider">
-        <item name="thumbColor">@color/black</item>
-        <item name="trackColorActive">@color/black</item>
+        <item name="thumbColor">@color/white</item>
+        <item name="thumbRadius">13dp</item>
+
+        <item name="trackColorActive">@color/black_800</item>
+        <item name="trackColorInactive">@color/black_400</item>
         <item name="labelStyle">@style/Label.Tooltip</item>
+        <item name="trackHeight">1dp</item>
 
         <item name="android:valueFrom">0</item>
         <item name="android:valueTo">100</item>
@@ -56,12 +79,83 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+
     <!-- Header Color Style -->
     <style name="Text.Color.Header" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/black_light</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <!-- Alert Dialog Style -->
+    <style name="Widget_AlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <!-- + and - Button Color -->
+        <item name="colorPrimary">@color/black</item>
+        <!-- Radio Button Selected Color -->
+        <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="Transparent_AlertDialog" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:colorBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- Button Style -->
+    <style name="Widget.Alert.Button" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.Button</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextAppearance.Button" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textFontWeight" tools:targetApi="p">400</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <!-- Divider Style -->
+    <style name="Divider" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+
+    <!-- Chip Check Style in Dialog -->
+    <style name="Widget.App.Chip.Check" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/black</item>
+
+        <item name="chipBackgroundColor">@color/white</item>
+
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/stroke_tint</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+
+        <item name="chipMinHeight">60dp</item>
+        <item name="chipEndPadding">15dp</item>
+        <item name="chipStartPadding">15dp</item>
+
+        <item name="android:checkable">true</item>
+        <item name="checkedIconVisible">true</item>
+
+        <item name="elevation">0dp</item>
+    </style>
+
+    <!-- Color Header in Dialog -->
+    <style name="Color.Header.Dialog" parent="">
+        <item name="android:textAppearance">@style/textAppearance</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="textAppearance" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textFontWeight" tools:targetApi="p">300</item>
+    </style>
+
+    <!-- Color Values in Dialog -->
+    <style name="Color.Values.Dialog" parent="">
+        <item name="android:textAppearance">@style/textAppearance</item>
+        <item name="android:textColor">@color/black_700</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
 </resources>

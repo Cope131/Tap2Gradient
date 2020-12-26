@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private Slider color1Slider;
     private Slider color2Slider;
 
-    private ImageView gradientImage;
+    // private ImageView gradientImage;
 
     View.OnTouchListener onTouchListener;
 
@@ -117,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
         color1Slider = findViewById(R.id.color1Slider);
         color2Slider = findViewById(R.id.color2Slider);
 
-        gradientImage = findViewById(R.id.gradientImageView);
+
+
+        // gradientImage = findViewById(R.id.gradientImageView);
 
 
         // Bottom Sheet Behaviour
@@ -176,13 +178,12 @@ public class MainActivity extends AppCompatActivity {
                     else if (selectedChipId == color2Chip.getId())
                         color2Slider.setValue(v);
 
-
                 } else {
                     Log.d(TAG, "matFrame is Null: ");
                 }
 
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
             }
 
             return true;
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Chip Selected
         colorsChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            Toast.makeText(getApplicationContext(), "Checked ID" + checkedId, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Checked ID" + checkedId);
             selectedChipId = checkedId;
         });
 
@@ -284,11 +285,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    Toast.makeText(getApplicationContext(), "Expanded / Half - Sheet", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onStateChanged - Sheet Expanded");
                     saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
                     saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    Toast.makeText(getApplicationContext(), "Collapsed - Sheet", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onStateChanged - Sheet Collapsed");
                     saveFAB.setIconTintResource(R.color.save_icon_color);
                     saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
                 }
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Log.d(TAG, "-----------------------------------" + slideOffset);
+                Log.d(TAG, "SlideOffSet: " + slideOffset);
                 if (slideOffset > 0.8) {
                     saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
                     saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
@@ -314,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                 if (color1 != 0 && color2 != 0)
                     showSaveOptionsDialog();
                 else
-                    Toast.makeText(getApplicationContext(), "Please select colors", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please Select Colors", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -452,8 +453,6 @@ public class MainActivity extends AppCompatActivity {
 
         okButton.setOnClickListener(onClick);
         cancelButton.setOnClickListener(onClick);
-
-
     }
 
     private String getColorValues(int colorValue) {
@@ -477,22 +476,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doSave(ChipGroup chipGroup, String text) {
-        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
         List<Integer> checkedIds = chipGroup.getCheckedChipIds();
 
         if (checkedIds.contains(R.id.galleryCheckChip)) {
-            Toast.makeText(getApplicationContext(), "gallery selected", Toast.LENGTH_SHORT).show();
             // Save to Gallery
             Bitmap gImage = gradientColorValuesBitmap();
-            gradientImage.setImageBitmap(gImage);
-            MediaStore.Images.Media.insertImage(getContentResolver(), gImage, "", "");
+            // gradientImage.setImageBitmap(gImage);
+            MediaStore.Images.Media.insertImage(getContentResolver(), gImage, "Gradient Color Values", "Created with Tap 2 Gradient");
+            Toast.makeText(getApplicationContext(), "Saved to Gallery", Toast.LENGTH_SHORT).show();
         }
         if (checkedIds.contains(R.id.clipboardCheckChip)) {
-            Toast.makeText(getApplicationContext(), "clipboard selected", Toast.LENGTH_SHORT).show();
             // Copy to Clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Gradient Color Values", text);
             clipboard.setPrimaryClip(clip);
+            Toast.makeText(getApplicationContext(), "Copied to Clipboard", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -522,8 +521,6 @@ public class MainActivity extends AppCompatActivity {
             backgroundDrawable.draw(gradientCanvas);
         else
             gradientCanvas.drawColor(Color.WHITE);
-
-
 
         // Text
          float scale = getResources().getDisplayMetrics().density;

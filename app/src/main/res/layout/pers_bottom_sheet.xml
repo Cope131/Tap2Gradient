@@ -117,7 +117,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <com.google.android.material.slider.Slider
                     android:id="@+id/color2Slider"
                     style="@style/Widget.App.Slider"
@@ -125,11 +124,11 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/gradientImageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </ImageView>
+<!--            <ImageView-->
+<!--                android:id="@+id/gradientImageView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+<!--            </ImageView>-->
 
         </LinearLayout>
 
