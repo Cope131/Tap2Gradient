@@ -15,17 +15,20 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
 
     private final int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{
-            "android.permission.CAMERA",
-            "android.permission.WRITE_EXTERNAL_STORAGE"
-    };
+    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
 
     // Views
     private PreviewView viewFinder;
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Slider color1Slider;
     private Slider color2Slider;
+
+    private ImageView gradientImage;
 
     View.OnTouchListener onTouchListener;
 
@@ -114,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
         color1Slider = findViewById(R.id.color1Slider);
         color2Slider = findViewById(R.id.color2Slider);
+
+        gradientImage = findViewById(R.id.gradientImageView);
 
 
         // Bottom Sheet Behaviour
@@ -165,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     // update slider for lightness of the color
                     float[] hsv = new float[3];
                     Color.RGBToHSV(valueR, valueG, valueB, hsv);
-                    float v = hsv[2]*100;
+                    float v = hsv[2] * 100;
 
                     if (selectedChipId == color1Chip.getId())
                         color1Slider.setValue(v);
@@ -224,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "HSV of Color" + Arrays.toString(hsv));
 
                 // change v (lightness) according to value of slider
-                hsv[2] = value/100;
+                hsv[2] = value / 100;
                 Log.d(TAG, "Modified HSV of Color" + Arrays.toString(hsv));
 
                 // convert hsv to color
@@ -257,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "HSV of Color" + Arrays.toString(hsv));
 
                 // change v (lightness) according to value of slider
-                hsv[2] = value/100;
+                hsv[2] = value / 100;
                 Log.d(TAG, "Modified HSV of Color" + Arrays.toString(hsv));
 
                 // convert hsv to color
@@ -283,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Expanded / Half - Sheet", Toast.LENGTH_SHORT).show();
                     saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
                     saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
-                }  else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     Toast.makeText(getApplicationContext(), "Collapsed - Sheet", Toast.LENGTH_SHORT).show();
                     saveFAB.setIconTintResource(R.color.save_icon_color);
                     saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
@@ -324,49 +328,49 @@ public class MainActivity extends AppCompatActivity {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         cameraProviderFuture.addListener(() -> {
-                // (2) Check Camera Provider Availability
-                ProcessCameraProvider cameraProvider = null;
-                try {
-                    cameraProvider = cameraProviderFuture.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            // (2) Check Camera Provider Availability
+            ProcessCameraProvider cameraProvider = null;
+            try {
+                cameraProvider = cameraProviderFuture.get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-                // (3) Select Camera Bind Lifecycle and Uses Cases
-                Preview preview = new Preview.Builder().build();
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
-                preview.setSurfaceProvider(viewFinder.createSurfaceProvider());
+            // (3) Select Camera Bind Lifecycle and Uses Cases
+            Preview preview = new Preview.Builder().build();
+            CameraSelector cameraSelector = new CameraSelector.Builder()
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
+            preview.setSurfaceProvider(viewFinder.createSurfaceProvider());
 
-                // Image Analyzer
-                ImageAnalysis imageAnalyzer = new ImageAnalysis.Builder()
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // non-blocking mode
-                        .build();
+            // Image Analyzer
+            ImageAnalysis imageAnalyzer = new ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // non-blocking mode
+                    .build();
 
-                imageAnalyzer.setAnalyzer(cameraExecutor, image -> {
-                    Log.d(TAG, "Image Info: " + image.getImageInfo());
+            imageAnalyzer.setAnalyzer(cameraExecutor, image -> {
+                Log.d(TAG, "Image Info: " + image.getImageInfo());
 
-                    // convert from bitmap to Matrix Frame to get RGB values
-                    final Bitmap bitmapFrame = viewFinder.getBitmap();
-                    matFrame = new Mat();
+                // convert from bitmap to Matrix Frame to get RGB values
+                final Bitmap bitmapFrame = viewFinder.getBitmap();
+                matFrame = new Mat();
 
-                    if (bitmapFrame == null)
-                        return;
-                    Utils.bitmapToMat(bitmapFrame, matFrame);
+                if (bitmapFrame == null)
+                    return;
+                Utils.bitmapToMat(bitmapFrame, matFrame);
 
-                    Log.d(TAG, "Mat Frame: " + matFrame);
+                Log.d(TAG, "Mat Frame: " + matFrame);
 
-                    image.close();
-                });
+                image.close();
+            });
 
-                try {
-                    cameraProvider.unbindAll();
-                    cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer);
-                } catch (Exception exc) {
-                    Log.e(TAG, "Use case binding failed", exc);
-                }
+            try {
+                cameraProvider.unbindAll();
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer);
+            } catch (Exception exc) {
+                Log.e(TAG, "Use case binding failed", exc);
+            }
         }, ContextCompat.getMainExecutor(this));
 
     }
@@ -384,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-                // start camera when granted
+            // start camera when granted
             if (allPermissionsGranted()) {
                 startCamera();
                 // exit app when not granted
@@ -413,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
         Button cancelButton = view.findViewById(R.id.dialogCancelButton);
         TextView color1ValuesTv = view.findViewById(R.id.color1ValuesDialogTextView);
         TextView color2ValuesTv = view.findViewById(R.id.color2ValuesDialogTextView);
-        ChipGroup saveOptionsChipGrp= view.findViewById(R.id.saveOptionsChipGroup);
+        ChipGroup saveOptionsChipGrp = view.findViewById(R.id.saveOptionsChipGroup);
         LinearLayout gradientBoxDialog = view.findViewById(R.id.gradientBoxDialog);
 
         // display color values
@@ -465,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
         // hsv
         float[] hsv = new float[3];
         Color.RGBToHSV(red, green, blue, hsv);
-        String hsvValue =  String.format("%.0f, %.0f, %.0f", hsv[0], hsv[1]*100, hsv[2]*100);
+        String hsvValue = String.format("%.0f, %.0f, %.0f", hsv[0], hsv[1] * 100, hsv[2] * 100);
         // store
         colorValues = String.format("Rgb: %s\nHex: %s\nHsv: %s", rgbValue, hexValue, hsvValue);
 
@@ -478,9 +482,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (checkedIds.contains(R.id.galleryCheckChip)) {
             Toast.makeText(getApplicationContext(), "gallery selected", Toast.LENGTH_SHORT).show();
+            // Save to Gallery
+            Bitmap gImage = gradientColorValuesBitmap();
+            gradientImage.setImageBitmap(gImage);
+            MediaStore.Images.Media.insertImage(getContentResolver(), gImage, "", "");
         }
         if (checkedIds.contains(R.id.clipboardCheckChip)) {
             Toast.makeText(getApplicationContext(), "clipboard selected", Toast.LENGTH_SHORT).show();
+            // Copy to Clipboard
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Gradient Color Values", text);
             clipboard.setPrimaryClip(clip);
@@ -490,10 +499,74 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume called" );
+        Log.d(TAG, "onResume called");
         // image analysis is called again
         if (allPermissionsGranted()) {
             startCamera();
         }
     }
+
+    private Bitmap gradientColorValuesBitmap() {
+
+        // Base Image for Gradient & Text
+        Bitmap baseBitmap = Bitmap.createBitmap(700, 400, Bitmap.Config.ARGB_8888);
+        Canvas baseCanvas = new Canvas(baseBitmap);
+        baseCanvas.drawColor(Color.WHITE);
+
+        // Gradient Box Image
+        Bitmap gradientBitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+        Canvas gradientCanvas = new Canvas(gradientBitmap);
+
+        Drawable backgroundDrawable = gradientBox.getBackground();
+        if (backgroundDrawable != null)
+            backgroundDrawable.draw(gradientCanvas);
+        else
+            gradientCanvas.drawColor(Color.WHITE);
+
+
+
+        // Text
+         float scale = getResources().getDisplayMetrics().density;
+
+        Paint paint = new Paint();
+        paint.setTextSize(30);
+        paint.setTextScaleX(1.f);
+        paint.setColor(Color.BLACK);
+        paint.setAntiAlias(true);
+
+        // Text + Gradient Box Image on Base Image
+
+            // Text Color 1
+        float x = 40;
+        float y = 100;
+
+        baseCanvas.drawText("Color 1", x, y - 40, paint);
+        paint.setTextSize(20);
+
+        String[] lines = getColorValues(color1).split("\\R",0);
+        for (String line : lines) {
+            baseCanvas.drawText(line, x, y, paint);
+            y += 30;
+        }
+
+            // Text Color 2
+        paint.setTextSize(30);
+        baseCanvas.drawText("Color 2", x, y + 50, paint);
+
+        y += 50 + 40;
+        paint.setTextSize(20);
+
+        lines = getColorValues(color2).split("\\R",0);
+        for (String line : lines) {
+            baseCanvas.drawText(line, x, y, paint);
+            y += 30;
+        }
+
+            // Gradient
+        baseCanvas.drawBitmap(gradientBitmap, 300, 0, null);
+
+        return baseBitmap;
+
+    }
+
 }
