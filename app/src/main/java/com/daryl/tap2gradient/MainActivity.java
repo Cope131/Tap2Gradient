@@ -181,12 +181,17 @@ public class MainActivity extends AppCompatActivity {
                     else if (selectedChipId == color2Chip.getId())
                         color2Slider.setValue(v);
 
+
                 } else {
                     Log.d(TAG, "matFrame is Null: ");
                 }
 
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                // Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
+
+                String colorChipSelected = selectedChipId == color1Chip.getId() ?
+                        "Color 1 Selected" : "Color 2 Selected";
+                Toast.makeText(getApplicationContext(), colorChipSelected, Toast.LENGTH_SHORT).show();
             }
 
             return true;
