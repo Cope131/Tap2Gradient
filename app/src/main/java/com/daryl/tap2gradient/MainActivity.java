@@ -55,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
 
     private final int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{
+            "android.permission.CAMERA",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
 
     // Views
     private PreviewView viewFinder;
