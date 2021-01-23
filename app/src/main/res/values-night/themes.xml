@@ -36,7 +36,7 @@
     <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="android:textColor">@color/black_800</item>
 
-        <item name="chipBackgroundColor">@color/white</item>
+        <item name="chipBackgroundColor">@color/bg_tint</item>
 
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/stroke_tint</item>
@@ -59,10 +59,10 @@
         <item name="thumbColor">@color/white</item>
         <item name="thumbRadius">13dp</item>
 
-        <item name="trackColorActive">@color/black_800</item>
-        <item name="trackColorInactive">@color/black_400</item>
+        <item name="trackColorActive">@color/blue_accent</item>
+        <item name="trackColorInactive">@color/black_200</item>
         <item name="labelStyle">@style/Label.Tooltip</item>
-        <item name="trackHeight">1dp</item>
+        <item name="trackHeight">1.2dp</item>
 
         <item name="android:valueFrom">0</item>
         <item name="android:valueTo">100</item>
@@ -122,7 +122,7 @@
     <style name="Widget.App.Chip.Check" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="android:textColor">@color/black</item>
 
-        <item name="chipBackgroundColor">@color/white</item>
+        <item name="chipBackgroundColor">@color/bg_tint</item>
 
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/stroke_tint</item>
@@ -134,6 +134,7 @@
 
         <item name="android:checkable">true</item>
         <item name="checkedIconVisible">true</item>
+        <item name="checkedIconTint">@color/blue_accent</item>
 
         <item name="elevation">0dp</item>
     </style>
