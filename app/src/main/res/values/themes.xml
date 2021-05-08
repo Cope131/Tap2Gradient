@@ -16,7 +16,6 @@
     <!-- FAB Style -->
     <style name="Widget.FAB" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:textColor">@color/white</item>
-        <item name="android:text">Save</item>
         <item name="android:textAppearance">@style/TextAppearance.Button</item>
 
         <item name="borderWidth">1dp</item>
