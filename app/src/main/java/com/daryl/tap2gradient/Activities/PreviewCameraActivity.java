@@ -1,4 +1,4 @@
-package com.daryl.tap2gradient;
+package com.daryl.tap2gradient.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,11 +28,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daryl.tap2gradient.Pointer.PixelPointer;
+import com.daryl.tap2gradient.Pointer.PixelPointerColorPreview;
+import com.daryl.tap2gradient.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -50,9 +53,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+public class PreviewCameraActivity extends AppCompatActivity {
 
-    private static String TAG = "MainActivity";
+    private static final String TAG = PreviewCameraActivity.class.getSimpleName();
 
     private final int REQUEST_CODE_PERMISSIONS = 101;
     private final String[] REQUIRED_PERMISSIONS = new String[]{
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private Slider color1Slider;
     private Slider color2Slider;
 
+    private FrameLayout pixelPointerMainView;
+
     // private ImageView gradientImage;
 
     View.OnTouchListener onTouchListener;
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private int color1;
     private int color2;
 
+
     // Check OpenCV
     static {
         if (OpenCVLoader.initDebug())
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_preview_camera);
 
         // Init Views
         viewFinder = findViewById(R.id.viewFinder);
@@ -120,10 +126,9 @@ public class MainActivity extends AppCompatActivity {
         color1Slider = findViewById(R.id.color1Slider);
         color2Slider = findViewById(R.id.color2Slider);
 
-
+        pixelPointerMainView = findViewById(R.id.pixelPointerFrameLayout);
 
         // gradientImage = findViewById(R.id.gradientImageView);
-
 
         // Bottom Sheet Behaviour
         sheetBehavior = BottomSheetBehavior.from(persBottomSheet);
@@ -140,11 +145,17 @@ public class MainActivity extends AppCompatActivity {
         // Pixel Selected
         onTouchListener = (view, motionEvent) -> {
 
-            if (motionEvent.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                // Toast.makeText(getApplicationContext(), "onTouch Down - Camera", Toast.LENGTH_SHORT).show();
-                // selected x and y coordinates
-                int x = (int) motionEvent.getX();
-                int y = (int) motionEvent.getY();
+            int eventAction = motionEvent.getAction();
+            // selected x and y coordinates
+            int x = (int) motionEvent.getX();
+            int y = (int) motionEvent.getY();
+
+            if (eventAction == MotionEvent.ACTION_DOWN) {
+                // Toast.makeText(getApplicationContext(), "onTouch Down - Camera", Toast.LENGTH_SHORT).show()
+
+            } else if (eventAction == MotionEvent.ACTION_UP) {
+
+                pixelPointerMainView.removeAllViews();
 
                 // get RGB values of that (x, y) pixel
                 if (matFrame != null) {
@@ -186,12 +197,40 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "matFrame is Null: ");
                 }
 
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 //Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
-
                 String colorChipSelected = selectedChipId == color1Chip.getId() ?
                         "Color 1 Selected" : "Color 2 Selected";
                 Toast.makeText(getApplicationContext(), colorChipSelected, Toast.LENGTH_SHORT).show();
+
+            } else if (eventAction == MotionEvent.ACTION_DOWN || eventAction == MotionEvent.ACTION_MOVE) {
+
+                int color = 0;
+                if (matFrame != null && y > 0 && x > 0) {
+                    double[] rgbValues = matFrame.get(y, x);
+                    int valueR = (int) rgbValues[0];
+                    int valueG = (int) rgbValues[1];
+                    int valueB = (int) rgbValues[2];
+                    color = Color.rgb(valueR, valueG, valueB);
+                }
+
+                pixelPointerMainView.removeAllViews();
+
+                Log.e(TAG, "x: " + x + " y: " + y);
+
+                // Pixel Pointer
+                if (x > 0 && y > 0) {
+                    PixelPointer pointer = new PixelPointer(PreviewCameraActivity.this, x, y, 15);
+                    pixelPointerMainView.addView(pointer);
+                }
+
+                // Preview Color
+                int y2 = y - 150;
+                if (x > 0 && y2 > 0) {
+                    PixelPointerColorPreview preview = new PixelPointerColorPreview(
+                            PreviewCameraActivity.this, x, y2, 50, color);
+                    pixelPointerMainView.addView(preview);
+                }
+
             }
 
             return true;
@@ -417,8 +456,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSaveOptionsDialog() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this, R.style.Transparent_AlertDialog);
-        View view = MainActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
+        AlertDialog.Builder adb = new AlertDialog.Builder(PreviewCameraActivity.this, R.style.Transparent_AlertDialog);
+        View view = PreviewCameraActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
         adb.setView(view);
 
         // init views in dialog

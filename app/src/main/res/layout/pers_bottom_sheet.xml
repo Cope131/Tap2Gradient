@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/persBottomSheet"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
     android:background="@drawable/pers_bottom_sheet_bg"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    android:paddingTop="10dp"
+    android:paddingTop="5dp"
     android:paddingBottom="20dp"
     app:behavior_hideable="false"
     app:behavior_peekHeight="200dp"
@@ -17,10 +18,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/draggableButton"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="25dp"
-        android:layout_height="15dp"
+        android:layout_width="27dp"
+        android:layout_height="17dp"
         android:layout_gravity="center"
-        android:backgroundTint="@color/draggable_button" />
+        android:backgroundTint="@color/gray_2" />
 
     <ScrollView
         android:layout_width="match_parent"

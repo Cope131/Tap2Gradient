@@ -1,12 +1,13 @@
-package com.daryl.tap2gradient;
+package com.daryl.tap2gradient.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.daryl.tap2gradient.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // start splash screen (this) then main
-                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this, PreviewCameraActivity.class));
                 // prevent going back to the splash screen
                 finish();
             }
