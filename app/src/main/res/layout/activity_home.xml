@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.PreviewCameraActivity">
+    tools:context=".Activities.HomeActivity">
 
     <!-- Live Camera Feed -->
     <androidx.camera.view.PreviewView
@@ -15,13 +15,23 @@
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        style="@style/Widget.FAB"
-        android:id="@+id/saveFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--        style="@style/Widget.FAB"-->
+<!--        android:id="@+id/saveFAB"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:text="Export"/>-->
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/customize_app_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="end"
-        android:text="Export"/>
+        android:layout_margin="15dp"
+        android:background="@drawable/button_customize_app_selector"
+        android:src="@drawable/ic_customize_app"
+        android:tint="@color/white"/>
 
     <FrameLayout
         android:id="@+id/pixelPointerFrameLayout"

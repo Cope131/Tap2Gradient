@@ -21,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // start splash screen (this) then main
-                startActivity(new Intent(SplashScreenActivity.this, PreviewCameraActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
                 // prevent going back to the splash screen
                 finish();
             }

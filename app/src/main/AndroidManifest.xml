@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.PreviewCameraActivity">
+        <activity android:name=".Activities.HomeActivity">
         </activity>
 
     </application>

@@ -7,134 +7,178 @@
     android:layout_height="match_parent"
     android:background="@drawable/pers_bottom_sheet_bg"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="20dp"
     app:behavior_hideable="false"
     app:behavior_peekHeight="200dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <!-- Button for Dragging -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/draggableButton"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="27dp"
-        android:layout_height="17dp"
-        android:layout_gravity="center"
-        android:backgroundTint="@color/gray_2" />
-
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
+        <!-- Button for Dragging -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/draggableButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="30dp"
+            android:layout_height="17dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/gray_2" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <!-- Colors Chips -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/colorsChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    app:checkedChip="@+id/color1Chip"
+                    app:chipSpacingHorizontal="20dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/color1Chip"
+                        style="@style/Widget.App.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Color 1"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/color2Chip"
+                        style="@style/Widget.App.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Color 2"/>
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Gradient Text -->
+
+                <!-- Gradient Box -->
+                <TextView
+                    style="@style/Text.Header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gradient"
+                    android:textFontWeight="300" />
+
+                <LinearLayout
+                    android:id="@+id/gradientBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal"/>
+
+                <!-- Lightness Text -->
+                <TextView
+                    style="@style/Text.Header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lightness"
+                    android:textFontWeight="300"
+                    android:layout_marginTop="30dp"/>
+
+                <!-- Shade Sliders -->
+                <!-- : Color 1-->
+                <TextView
+                    style="@style/Text.Color.Header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Color 1"
+                    android:textFontWeight="300" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/color1Slider"
+                        style="@style/Widget.App.Slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- : Color 1-->
+                <TextView
+                    style="@style/Text.Color.Header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Color 2"
+                    android:textFontWeight="300" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/color2Slider"
+                        style="@style/Widget.App.Slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!--            <ImageView-->
+                <!--                android:id="@+id/gradientImageView"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content">-->
+                <!--            </ImageView>-->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Bottom Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="71dp"
+            android:layout_gravity="bottom"
+            android:background="@color/gray_secondary">
 
-            <!-- Colors Chips -->
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/colorsChipGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                app:checkedChip="@+id/color1Chip"
-                app:chipSpacingHorizontal="20dp"
-                app:singleSelection="true"
-                app:selectionRequired="true">
+            <!-- Copy Color Values Button -->
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/copy_color_values_app_compat_image_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bottom_button_selector"
+                android:src="@drawable/ic_copy_color_values"
+                />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/color1Chip"
-                    style="@style/Widget.App.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Color 1"/>
+            <!-- Save Gradient Color to Gallery Button -->
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/save_gradient_color_to_gallery_app_compat_image_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bottom_button_selector"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/color2Chip"
-                    style="@style/Widget.App.Chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Color 2"/>
-
-            </com.google.android.material.chip.ChipGroup>
-
-            <!-- Gradient Text -->
-
-            <!-- Gradient Box -->
-            <TextView
-                style="@style/Text.Header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gradient"
-                android:textFontWeight="300" />
-
-            <LinearLayout
-                android:id="@+id/gradientBox"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/white"
-                android:orientation="horizontal"/>
-
-            <!-- Lightness Text -->
-            <TextView
-                style="@style/Text.Header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lightness"
-                android:textFontWeight="300"
-                android:layout_marginTop="30dp"/>
-
-            <!-- Shade Sliders -->
-            <!-- : Color 1-->
-            <TextView
-                style="@style/Text.Color.Header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Color 1"
-                android:textFontWeight="300" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/color1Slider"
-                    style="@style/Widget.App.Slider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <!-- : Color 1-->
-            <TextView
-                style="@style/Text.Color.Header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Color 2"
-                android:textFontWeight="300" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/color2Slider"
-                    style="@style/Widget.App.Slider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-<!--            <ImageView-->
-<!--                android:id="@+id/gradientImageView"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-<!--            </ImageView>-->
+            <!-- Copy Gradient Code Button -->
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/copy_gradient_code_app_compat_image_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bottom_button_selector"/>
 
         </LinearLayout>
 
+    </FrameLayout>
 
-
-    </ScrollView>
 
 </LinearLayout>

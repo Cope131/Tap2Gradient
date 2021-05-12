@@ -3,6 +3,8 @@ package com.daryl.tap2gradient.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
@@ -11,7 +13,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -37,6 +39,7 @@ import com.daryl.tap2gradient.Pointer.PixelPointer;
 import com.daryl.tap2gradient.Pointer.PixelPointerColorPreview;
 import com.daryl.tap2gradient.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -53,16 +56,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PreviewCameraActivity extends AppCompatActivity
+public class HomeActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener, Slider.OnChangeListener {
 
-    private static final String TAG = PreviewCameraActivity.class.getSimpleName();
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     // Permissions
     private final int REQUEST_CODE_PERMISSIONS = 101;
     private final String[] REQUIRED_PERMISSIONS = new String[]{
-            "android.permission.CAMERA",
-            "android.permission.WRITE_EXTERNAL_STORAGE"
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     // CameraX
@@ -71,13 +74,15 @@ public class PreviewCameraActivity extends AppCompatActivity
 
     // Views
     // -> Top
-    private ExtendedFloatingActionButton saveFAB;
+//    private ExtendedFloatingActionButton saveFAB;
+    private AppCompatImageButton customizeAppButton;
 
     // -> Persistent Bottom Sheet Content
-    private LinearLayout gradientBox;
+    private MaterialButton draggableButton;
     private ChipGroup colorsChipGroup;
     private Chip color1Chip, color2Chip;
     private int selectedChipId;
+    private LinearLayout gradientBox;
     private Slider color1Slider, color2Slider;
 
     // Persistent Bottom Sheet
@@ -108,7 +113,7 @@ public class PreviewCameraActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preview_camera);
+        setContentView(R.layout.activity_home);
 
         // Initialize Views
         initViews();
@@ -147,16 +152,22 @@ public class PreviewCameraActivity extends AppCompatActivity
 
     // ============================================================================================
     private void initViews() {
+        // Top
+        customizeAppButton = findViewById(R.id.customize_app_button);
+        customizeAppButton.setOnClickListener(this::onClick);
+
         // CameraX
         viewFinder = findViewById(R.id.viewFinder);
 
-        saveFAB = findViewById(R.id.saveFAB);
-        saveFAB.setOnClickListener(this::onClick);
+//        saveFAB = findViewById(R.id.saveFAB);
+//        saveFAB.setOnClickListener(this::onClick);
 
         // Persistent Bottom Sheet
         persBottomSheet = findViewById(R.id.persBottomSheet);
 
         // -> Content
+        draggableButton = findViewById(R.id.draggableButton);
+
         colorsChipGroup = findViewById(R.id.colorsChipGroup);
         color1Chip = findViewById(R.id.color1Chip);
         color2Chip = findViewById(R.id.color2Chip);
@@ -179,12 +190,15 @@ public class PreviewCameraActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.saveFAB:
-                if (color1 != 0 && color2 != 0)
-                    showSaveOptionsDialog();
-                else
-                    Toast.makeText(getApplicationContext(), "Please Select Colors", Toast.LENGTH_SHORT)
-                            .show();
+//            case R.id.saveFAB:
+//                if (color1 != 0 && color2 != 0)
+//                    showSaveOptionsDialog();
+//                else
+//                    Toast.makeText(getApplicationContext(), "Please Select Colors", Toast.LENGTH_SHORT)
+//                            .show();
+//                break;
+            case R.id.customize_app_button:
+
                 break;
         }
     }
@@ -349,7 +363,7 @@ public class PreviewCameraActivity extends AppCompatActivity
 
                     // Pixel Pointer
                     if (x > 0 && y > 0) {
-                        PixelPointer pointer = new PixelPointer(PreviewCameraActivity.this, x, y, 15);
+                        PixelPointer pointer = new PixelPointer(HomeActivity.this, x, y, 15);
                         pixelPointerMainView.addView(pointer);
                     }
 
@@ -357,7 +371,7 @@ public class PreviewCameraActivity extends AppCompatActivity
                     int y2 = y - 150;
                     if (x > 0 && y2 > 0) {
                         PixelPointerColorPreview preview = new PixelPointerColorPreview(
-                                PreviewCameraActivity.this, x, y2, 50, color);
+                                HomeActivity.this, x, y2, 50, color);
                         pixelPointerMainView.addView(preview);
                     }
 
@@ -470,8 +484,8 @@ public class PreviewCameraActivity extends AppCompatActivity
 
     // ============================================================================================
     private void showSaveOptionsDialog() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(PreviewCameraActivity.this, R.style.Transparent_AlertDialog);
-        View view = PreviewCameraActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
+        AlertDialog.Builder adb = new AlertDialog.Builder(HomeActivity.this, R.style.Transparent_AlertDialog);
+        View view = HomeActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
         adb.setView(view);
 
         // init views in dialog
@@ -627,12 +641,12 @@ public class PreviewCameraActivity extends AppCompatActivity
             // Change Save Button Color Dynamically
             if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                 Log.d(TAG, "onStateChanged - Sheet Expanded");
-                saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
-                saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
+//                saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
+//                saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
             } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 Log.d(TAG, "onStateChanged - Sheet Collapsed");
-                saveFAB.setIconTintResource(R.color.save_icon_color);
-                saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
+//                saveFAB.setIconTintResource(R.color.save_icon_color);
+//                saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
             }
         }
 
@@ -640,13 +654,40 @@ public class PreviewCameraActivity extends AppCompatActivity
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             Log.d(TAG, "SlideOffSet: " + slideOffset);
             if (slideOffset > 0.8) {
-                saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
-                saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
+//                saveFAB.setIconTintResource(R.color.save_icon_color_on_sheet);
+//                saveFAB.setTextColor(getResources().getColorStateList(R.color.black, getTheme()));
             } else if (slideOffset < 0.4) {
-                saveFAB.setIconTintResource(R.color.save_icon_color);
-                saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
+//                saveFAB.setIconTintResource(R.color.save_icon_color);
+//                saveFAB.setTextColor(getResources().getColorStateList(R.color.white, getTheme()));
             }
+
+            // Swiping Up
+            if (slideOffset > lastSlideOffSet) {
+                if (slideOffset > 0.99f) {
+                    getWindow().setStatusBarColor(getColor(R.color.white));
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    persBottomSheet.setBackground(getDrawable(R.drawable.pers_bottom_sheet_bg_expanded));
+                    draggableButton.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
+                }
+                if (slideOffset > 0.5) {
+                    // getSupportActionBar().show();
+                }
+            }
+            // Swiping Down
+            else if (slideOffset < lastSlideOffSet) {
+                if (slideOffset < 0.99f) {
+                    getWindow().setStatusBarColor(getColor(R.color.transparent));
+                    getWindow().getDecorView().setSystemUiVisibility(0);
+                    persBottomSheet.setBackground(getDrawable(R.drawable.pers_bottom_sheet_bg));
+                    draggableButton.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.gray_2));
+                }
+                if (slideOffset < 0.5) {
+                    // getSupportActionBar().hide();
+                }
+            }
+            lastSlideOffSet = slideOffset;
         }
+
     }
 
 }
