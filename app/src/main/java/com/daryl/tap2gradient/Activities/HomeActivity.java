@@ -3,7 +3,6 @@ package com.daryl.tap2gradient.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -31,10 +30,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daryl.tap2gradient.BottomSheetDialogs.CopyColorValuesBottomSheetDialog;
+import com.daryl.tap2gradient.BottomSheetDialogs.CopyGradientCodeSheetDialog;
+import com.daryl.tap2gradient.BottomSheetDialogs.SaveToGallerySheetDialog;
 import com.daryl.tap2gradient.Pointer.PixelPointer;
 import com.daryl.tap2gradient.Pointer.PixelPointerColorPreview;
 import com.daryl.tap2gradient.R;
@@ -42,7 +45,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -75,7 +77,7 @@ public class HomeActivity extends AppCompatActivity
     // Views
     // -> Top
 //    private ExtendedFloatingActionButton saveFAB;
-    private AppCompatImageButton customizeAppButton;
+    private ImageButton customizeAppButton;
 
     // -> Persistent Bottom Sheet Content
     private MaterialButton draggableButton;
@@ -84,6 +86,18 @@ public class HomeActivity extends AppCompatActivity
     private int selectedChipId;
     private LinearLayout gradientBox;
     private Slider color1Slider, color2Slider;
+
+    // Bottom Bar
+    private AppCompatImageButton copyColorValuesButton, saveToGalleryButton, copyGradientCodeButton;
+
+    // Bottom Sheet Dialog
+    // -> Copy Color Values
+    private CopyColorValuesBottomSheetDialog copyColorValuesBottomSheetDialog;
+    // -> Save to Galley
+    private SaveToGallerySheetDialog saveToGallerySheetDialog;
+    // -> Copy Gradient Code for Developers
+    private CopyGradientCodeSheetDialog copyGradientCodeSheetDialog;
+
 
     // Persistent Bottom Sheet
     private LinearLayout persBottomSheet;
@@ -121,6 +135,15 @@ public class HomeActivity extends AppCompatActivity
         // Initialize Bottom Sheet Behaviour (Init Bottom Sheet View First)
         persBottomSheetBehavior = BottomSheetBehavior.from(persBottomSheet);
 
+        // Initialize Bottom Sheet Dialogs
+        copyColorValuesBottomSheetDialog =
+                new CopyColorValuesBottomSheetDialog(this, R.layout.bottom_sheet_dialog_copy_color_values);
+        saveToGallerySheetDialog =
+                new SaveToGallerySheetDialog(this, R.layout.bottom_sheet_dialog_save_to_gallery);
+        copyGradientCodeSheetDialog =
+                new CopyGradientCodeSheetDialog(this, R.layout.bottom_sheet_dialog_copy_gradient_code);
+
+
         // Initialize Camera
         cameraExecutor = Executors.newSingleThreadExecutor();
 
@@ -152,6 +175,9 @@ public class HomeActivity extends AppCompatActivity
 
     // ============================================================================================
     private void initViews() {
+        // Pointer
+        pixelPointerMainView = findViewById(R.id.pixelPointerFrameLayout);
+
         // Top
         customizeAppButton = findViewById(R.id.customize_app_button);
         customizeAppButton.setOnClickListener(this::onClick);
@@ -180,8 +206,13 @@ public class HomeActivity extends AppCompatActivity
         color1Slider.addOnChangeListener(this::onValueChange);
         color2Slider.addOnChangeListener(this::onValueChange);
 
-        // Pointer
-        pixelPointerMainView = findViewById(R.id.pixelPointerFrameLayout);
+        // Bottom Bar
+        copyColorValuesButton = findViewById(R.id.copy_color_values_app_compat_image_button);
+        saveToGalleryButton = findViewById(R.id.save_gradient_color_to_gallery_app_compat_image_button);
+        copyGradientCodeButton = findViewById(R.id.copy_gradient_code_app_compat_image_button);
+        copyColorValuesButton.setOnClickListener(this::onClick);
+        saveToGalleryButton.setOnClickListener(this::onClick);
+        copyGradientCodeButton.setOnClickListener(this::onClick);
     }
 
     // ============================================================================================
@@ -198,7 +229,59 @@ public class HomeActivity extends AppCompatActivity
 //                            .show();
 //                break;
             case R.id.customize_app_button:
+                break;
+            case R.id.copy_color_values_app_compat_image_button:
 
+                if (color1 != 0 && color2 != 0) {
+                    // --- Color 1
+                    com.daryl.tap2gradient.Data.Color c1 = new com.daryl.tap2gradient.Data.Color();
+
+                    // -> Set Color 1 Hex
+                    c1.setHEX("#" + Integer.toHexString(color1).substring(2).toUpperCase());
+
+                    // -> Set Color 1 RGB
+                    int red = Color.red(color1);
+                    int green = Color.green(color1);
+                    int blue = Color.blue(color1);
+                    c1.setRGBInt(new int[]{red, green, blue});
+
+                    // -> Set Color 1 HSV
+                    float[] hsv = new float[3];
+                    Color.RGBToHSV(red, green, blue, hsv);
+                    c1.setHSVInt(new float[]{hsv[0], hsv[1] * 100, hsv[2] * 100});
+
+                    // --- Color 2
+                    com.daryl.tap2gradient.Data.Color c2 = new com.daryl.tap2gradient.Data.Color();
+
+                    // -> Set Color 1 Hex
+                    c2.setHEX("#" + Integer.toHexString(color2).substring(2).toUpperCase());
+
+                    // -> Set Color 1 RGB
+                    red = Color.red(color2);
+                    green = Color.green(color2);
+                    blue = Color.blue(color2);
+                    c2.setRGBInt(new int[]{red, green, blue});
+
+                    // -> Set Color 1 HSV
+                    hsv = new float[3];
+                    Color.RGBToHSV(red, green, blue, hsv);
+                    c2.setHSVInt(new float[]{hsv[0], hsv[1] * 100, hsv[2] * 100});
+
+                    // -> Set Color 1 in Bottom Sheet
+                    copyColorValuesBottomSheetDialog.setColor1(c1);
+                    copyColorValuesBottomSheetDialog.setColor2(c2);
+                    copyColorValuesBottomSheetDialog.updateViews();
+                    copyColorValuesBottomSheetDialog.getBehavior().setFitToContents(true);
+                    copyColorValuesBottomSheetDialog.show();
+                }
+                break;
+            case R.id.save_gradient_color_to_gallery_app_compat_image_button:
+                saveToGallerySheetDialog.getBehavior().setFitToContents(true);
+                saveToGallerySheetDialog.show();
+                break;
+            case R.id.copy_gradient_code_app_compat_image_button:
+                copyGradientCodeSheetDialog.getBehavior().setFitToContents(true);
+                copyGradientCodeSheetDialog.show();
                 break;
         }
     }

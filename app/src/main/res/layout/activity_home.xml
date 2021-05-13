@@ -23,7 +23,7 @@
 <!--        android:layout_gravity="end"-->
 <!--        android:text="Export"/>-->
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/customize_app_button"
         android:layout_width="48dp"
         android:layout_height="48dp"

@@ -13,6 +13,7 @@
     <color name="gray_2">#E6E6E6</color>
     <color name="gray_secondary">#F8F8F8</color>
     <color name="gray_secondary_2">#CCF8F8F8</color>
+    <color name="gray_outline">#0D707070</color>
 
     <color name="black_A10">#1A000000</color>
     <color name="black_A20">#33000000</color>

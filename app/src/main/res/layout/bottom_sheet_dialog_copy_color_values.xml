@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_dialog_bg">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Title & Close Button -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="31dp"
+            android:paddingBottom="40dp">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Copy Color Values"
+                android:textColor="@color/black"
+                android:textSize="23sp"
+                android:fontFamily="@font/quicksand"
+                android:layout_alignParentStart="true"/>
+
+            <!-- Close Button -->
+            <ImageButton
+                android:id="@+id/close_copy_color_values_app_compat_image_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_close"
+                android:background="@drawable/close_button_selector" />
+
+        </RelativeLayout>
+
+        <!-- Color 1 Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:background="@drawable/card_child_bg">
+
+                <!-- Display Color 1 -->
+                <View
+                    android:id="@+id/gradient_color1_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/card_child_left_bg"
+                    android:backgroundTint="@color/black_A10"/>
+
+                <!-- Color 1 Values -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="7"
+                    android:padding="20dp"
+                    android:background="@drawable/card_child_right_bg">
+
+                    <!-- Color 1 Hex Color Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Color 1 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 1 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Hex"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 1 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color1_hexadecimal_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 1 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_hex_color1_value_image_button"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector"/>
+
+                    </RelativeLayout>
+
+                    <!-- Color 1 RGB Color Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <!-- Color 1 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 1 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="RGB"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 1 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color1_rgb_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 1 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_rgb_color1_value_image_button"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector"/>
+
+                    </RelativeLayout>
+
+                    <!-- Color 1 HSV Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <!-- Color 1 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 1 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="HSV"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 1 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color1_hsv_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 1 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_hsv_color1_value_image_button"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Color 2 Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:background="@drawable/card_child_bg">
+
+                <!-- Display Color 2 -->
+                <View
+                    android:id="@+id/gradient_color2_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/card_child_left_bg"
+                    android:backgroundTint="@color/black_A10"/>
+
+                <!-- Color 2 Values -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="7"
+                    android:padding="20dp"
+                    android:background="@drawable/card_child_right_bg">
+
+                    <!-- Color 2 Hex Color Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Color 2 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 2 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Hexadecimal"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 2 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color2_hexadecimal_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 2 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_hex_color2_value_image_button"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector"/>
+
+                    </RelativeLayout>
+
+                    <!-- Color 2 RGB Color Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <!-- Color 2 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 2 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="RGB"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 2 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color2_rgb_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 1 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_rgb_color2_value_image_button"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector"/>
+
+                    </RelativeLayout>
+
+                    <!-- Color 2 HSV Values -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp">
+
+                        <!-- Color 2 Label & Value -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Color 2 Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="HSV"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                            <!-- Color 2 Value -->
+                            <TextView
+                                android:id="@+id/gradient_color2_hsv_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Value"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/quicksand"/>
+
+                        </LinearLayout>
+
+                        <!-- Color 2 Copy Value Button -->
+                        <ImageButton
+                            android:id="@+id/copy_hsv_color2_value_image_button"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_copy_value"
+                            android:background="@drawable/copy_button_selector"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <!-- Copy All Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/copy_all_appcompat_button"
+            android:layout_width="128dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:background="@drawable/button_selector"
+            android:text="Copy All"
+            android:textSize="16sp"
+            android:textColor="@color/blue_accent"
+            android:fontFamily="@font/quicksand"
+            android:elevation="0dp"
+            android:outlineProvider="none"/>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
