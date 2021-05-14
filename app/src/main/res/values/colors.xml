@@ -15,6 +15,7 @@
     <color name="gray_secondary_2">#CCF8F8F8</color>
     <color name="gray_outline">#0D707070</color>
 
+    <color name="black_A2">#05000000</color>
     <color name="black_A10">#1A000000</color>
     <color name="black_A20">#33000000</color>
     <color name="black_A50">#80000000</color>
@@ -24,8 +25,34 @@
     <color name="black_700">#616161</color>
     <color name="black_800">#424242</color>
 
-    <color name="blue_accent">#0BE4E9</color>
-    <color name="blue_accent_light">#EBFFFF</color>
-
     <color name="transparent">#00000000</color>
+
+    <color name="blue_dark">#2E3033</color>
+
+    <!-- Classic Accent -->
+    <color name="blue_accent">#0BE4E9</color>
+    <color name="blue_light_accent">#EBFFFF</color>
+    <color name="yellow_green_accent">#5EFF71</color>
+    <color name="yellow_green_light_accent">#EBFFEE</color>
+    <color name="lime_accent">#BFFE8C</color>
+    <color name="lime_light_accent">#EBFFDA</color>
+
+    <!-- Dream Accent -->
+    <color name="orchid_accent">#B0ABFF</color>
+    <color name="orchid_light_accent">#EBEAFF</color>
+    <color name="floral_accent">#D2BBFF</color>
+    <color name="floral_light_accent">#EBE1FF</color>
+    <color name="lavender_accent">#F3CBFF</color>
+    <color name="lavender_light_accent">#F7EBFB</color>
+
+    <!-- Code Text Colors (Light) -->
+    <color name="blue_code_light">#407CE8</color>
+    <color name="purple_code_light">#9C27B0</color>
+    <color name="green_code_light">#0D904F</color>
+
+    <!-- Code Text Colors (Dark) -->
+    <color name="blue_code_dark">#4DD0E1</color>
+    <color name="purple_code_dark">#F06292</color>
+    <color name="green_code_dark">#9CCC65</color>
+
 </resources>

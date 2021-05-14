@@ -15,23 +15,15 @@
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
-<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--        style="@style/Widget.FAB"-->
-<!--        android:id="@+id/saveFAB"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="end"-->
-<!--        android:text="Export"/>-->
-
     <ImageButton
-        android:id="@+id/customize_app_button"
+        android:id="@+id/customize_app_image_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="end"
         android:layout_margin="15dp"
         android:background="@drawable/button_customize_app_selector"
         android:src="@drawable/ic_customize_app"
-        android:tint="@color/white"/>
+        android:tint="@color/white_A60"/>
 
     <FrameLayout
         android:id="@+id/pixelPointerFrameLayout"

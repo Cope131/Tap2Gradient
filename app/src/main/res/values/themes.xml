@@ -11,6 +11,9 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
+        <!--  Font -->
+        <item name="fontFamily">@font/quicksand</item>
+        <item name="android:fontFamily">@font/quicksand</item>
     </style>
 
     <!-- FAB Style -->
@@ -39,11 +42,47 @@
 
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/stroke_tint</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+        <item name="shapeAppearanceOverlay">@style/ChipColorShapeAppearanceOverlay</item>
 
-        <item name="chipMinHeight">70dp</item>
+        <item name="chipMinHeight">30dp</item>
         <item name="chipEndPadding">15dp</item>
         <item name="chipStartPadding">15dp</item>
+    </style>
+
+    <style name="WidgetPictureOptionsChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/blue_accent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">@style/ChipTextAppearance</item>
+
+        <item name="chipBackgroundColor">@color/bg_tint</item>
+
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/stroke_tint</item>
+        <item name="shapeAppearanceOverlay">@style/ChipShapeAppearanceOverlay</item>
+
+        <item name="chipMinHeight">45dp</item>
+        <item name="chipEndPadding">15dp</item>
+        <item name="chipStartPadding">15dp</item>
+
+        <item name="android:checkable">true</item>
+        <item name="checkedIconVisible">true</item>
+        <item name="checkedIconTint">@color/blue_accent</item>
+
+        <item name="elevation">0dp</item>
+        <item name="android:outlineProvider">none</item>
+    </style>
+
+    <style name="ChipShapeAppearanceOverlay">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ChipColorShapeAppearanceOverlay">
+        <item name="cornerSize">100%</item>
+    </style>
+
+    <style name="ChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="fontFamily">@font/quicksand_medium</item>
+        <item name="android:fontFamily">@font/quicksand_medium</item>
     </style>
 
     <!-- Header Style -->
@@ -56,7 +95,8 @@
     <!-- Slider Style -->
     <style name="Widget.App.Slider" parent="Widget.MaterialComponents.Slider">
         <item name="thumbColor">@color/white</item>
-        <item name="thumbRadius">13dp</item>
+        <item name="thumbRadius">15dp</item>
+        <item name="thumbElevation">0.5dp</item>
 
         <item name="trackColorActive">@color/blue_accent</item>
         <item name="trackColorInactive">@color/black_200</item>
@@ -156,12 +196,6 @@
         <item name="android:textColor">@color/black_700</item>
         <item name="android:textSize">15sp</item>
         <item name="android:layout_marginBottom">10dp</item>
-    </style>
-
-    <!-- Bottom App Bar -->
-    <style name="BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
-        <item name="backgroundTint">@color/white</item>
-        <item name="elevation">2dp</item>
     </style>
 
 </resources>

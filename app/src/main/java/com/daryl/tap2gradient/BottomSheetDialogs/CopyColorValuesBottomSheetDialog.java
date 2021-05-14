@@ -20,6 +20,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class CopyColorValuesBottomSheetDialog extends BottomSheetDialog implements View.OnClickListener {
 
+    private static final String TAG = CopyColorValuesBottomSheetDialog.class.getSimpleName();
+
     private final Context context;
 
     // Views

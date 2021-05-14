@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/white">
 
@@ -54,7 +54,7 @@
                 android:layout_height="210dp"
                 android:orientation="horizontal"
                 android:weightSum="10"
-                android:background="@drawable/card_child_bg">
+                android:background="@drawable/card_bg">
 
                 <!-- Display Color 1 -->
                 <View
@@ -222,7 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/white">
 
@@ -231,7 +231,7 @@
                 android:layout_height="210dp"
                 android:orientation="horizontal"
                 android:weightSum="10"
-                android:background="@drawable/card_child_bg">
+                android:background="@drawable/card_bg">
 
                 <!-- Display Color 2 -->
                 <View
@@ -406,7 +406,7 @@
             android:text="Copy All"
             android:textSize="16sp"
             android:textColor="@color/blue_accent"
-            android:fontFamily="@font/quicksand"
+            android:textFontWeight="600"
             android:elevation="0dp"
             android:outlineProvider="none"/>
 
