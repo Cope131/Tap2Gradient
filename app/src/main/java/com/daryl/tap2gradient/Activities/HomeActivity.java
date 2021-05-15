@@ -37,12 +37,12 @@ import android.widget.Toast;
 
 import com.daryl.tap2gradient.BottomSheetDialogs.CopyColorValuesBottomSheetDialog;
 import com.daryl.tap2gradient.BottomSheetDialogs.CopyGradientCodeSheetDialog;
+import com.daryl.tap2gradient.BottomSheetDialogs.CustomizeAppBottomSheetDialog;
 import com.daryl.tap2gradient.BottomSheetDialogs.SaveToGallerySheetDialog;
 import com.daryl.tap2gradient.Pointer.PixelPointer;
 import com.daryl.tap2gradient.Pointer.PixelPointerColorPreview;
 import com.daryl.tap2gradient.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -80,16 +80,21 @@ public class HomeActivity extends AppCompatActivity
     private ImageButton customizeAppButton;
 
     // -> Persistent Bottom Sheet Content
+    // --> Top
     private MaterialButton draggableButton;
-    private ChipGroup colorsChipGroup;
-    private Chip color1Chip, color2Chip;
-    private int selectedChipId;
+    // --> Color Selectors
+    private ImageButton color1SelectorImageButton, color2SelectorImageButton;
+    private View color1SelectedView, color2SelectedView;
+    private ColorNum selectedColor = ColorNum.COLOR_1;
+    // --> Gradient Preview
     private View gradientView;
+    // --> Adjust Lightness
     private Slider color1Slider, color2Slider;
     private View color1SliderView, color2SliderView;
 
-    // Bottom Bar
+    // -> Bottom Bar
     private ImageButton copyColorValuesButton, saveToGalleryButton, copyGradientCodeButton;
+
 
     // Bottom Sheet Dialog
     // -> Copy Color Values
@@ -98,10 +103,8 @@ public class HomeActivity extends AppCompatActivity
     private SaveToGallerySheetDialog saveToGallerySheetDialog;
     // -> Copy Gradient Code for Developers
     private CopyGradientCodeSheetDialog copyGradientCodeSheetDialog;
-
-    // Top Sheet Dialog
     // -> Customize App
-//    private TopSheetDialog customizeAppTopSheetDialog;
+    private CustomizeAppBottomSheetDialog customizeAppBottomSheetDialog;
 
 
     // Persistent Bottom Sheet
@@ -147,10 +150,7 @@ public class HomeActivity extends AppCompatActivity
                 new SaveToGallerySheetDialog(this, R.layout.bottom_sheet_dialog_save_to_gallery);
         copyGradientCodeSheetDialog =
                 new CopyGradientCodeSheetDialog(this, R.layout.bottom_sheet_dialog_copy_gradient_code);
-
-//        customizeAppTopSheetDialog = new TopSheetDialog(this);
-//        customizeAppTopSheetDialog.setContentView(R.layout.top_sheet_dialog_customize_app);
-//        customizeAppTopSheetDialog.show();
+        customizeAppBottomSheetDialog = new CustomizeAppBottomSheetDialog(this, R.layout.bottom_sheet_dialog_customize_app);
 
 
         // Initialize Camera
@@ -173,11 +173,6 @@ public class HomeActivity extends AppCompatActivity
         // Handle Bottom Sheet Dragging
         persBottomSheetBehavior.addBottomSheetCallback(myBottomSheetBehavior);
 
-        // Chip Selected
-        colorsChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            Log.d(TAG, "Checked ID" + checkedId);
-            selectedChipId = checkedId;
-        });
 
     } // <--- end of onCreate method --->
 
@@ -194,19 +189,21 @@ public class HomeActivity extends AppCompatActivity
         // CameraX
         viewFinder = findViewById(R.id.viewFinder);
 
-//        saveFAB = findViewById(R.id.saveFAB);
-//        saveFAB.setOnClickListener(this::onClick);
-
         // Persistent Bottom Sheet
         persBottomSheet = findViewById(R.id.persBottomSheet);
 
         // -> Content
         draggableButton = findViewById(R.id.draggableButton);
 
-        colorsChipGroup = findViewById(R.id.colorsChipGroup);
-        color1Chip = findViewById(R.id.color1Chip);
-        color2Chip = findViewById(R.id.color2Chip);
-        selectedChipId = color1Chip.getId(); // Selected by Default
+        color1SelectorImageButton = findViewById(R.id.color1_selector_image_button);
+        color2SelectorImageButton = findViewById(R.id.color2_selector_image_button);
+        color1SelectorImageButton.setOnClickListener(this::onClick);
+        color2SelectorImageButton.setOnClickListener(this::onClick);
+
+        color1SelectedView = findViewById(R.id.color1_selected_ring);
+        color2SelectedView = findViewById(R.id.color2_selected_ring);
+        color2SelectedView.setVisibility(View.GONE);
+
 
         gradientView = findViewById(R.id.gradient_view);
 
@@ -242,14 +239,8 @@ public class HomeActivity extends AppCompatActivity
     public void onClick(View v) {
         com.daryl.tap2gradient.Data.Color[] colors = getColors();
         switch (v.getId()) {
-//            case R.id.saveFAB:
-//                if (color1 != 0 && color2 != 0)
-//                    showSaveOptionsDialog();
-//                else
-//                    Toast.makeText(getApplicationContext(), "Please Select Colors", Toast.LENGTH_SHORT)
-//                            .show();
-//                break;
             case R.id.customize_app_image_button:
+                customizeAppBottomSheetDialog.show();
                 break;
             case R.id.copy_color_values_app_image_button:
 
@@ -285,6 +276,16 @@ public class HomeActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(this, "Please Select Colors", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.color1_selector_image_button:
+                selectedColor = ColorNum.COLOR_1;
+                color1SelectedView.setVisibility(View.VISIBLE);
+                color2SelectedView.setVisibility(View.GONE);
+                break;
+            case R.id.color2_selector_image_button:
+                selectedColor = ColorNum.COLOR_2;
+                color1SelectedView.setVisibility(View.GONE);
+                color2SelectedView.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -324,6 +325,7 @@ public class HomeActivity extends AppCompatActivity
 
                 // update color 1 view
                 color1SliderView.setBackgroundTintList(ColorStateList.valueOf(color1));
+                color1SelectorImageButton.setBackgroundTintList(ColorStateList.valueOf(color1));
 
                 break;
             case R.id.color2Slider:
@@ -357,6 +359,7 @@ public class HomeActivity extends AppCompatActivity
 
                 // update color 2 view
                 color2SliderView.setBackgroundTintList(ColorStateList.valueOf(color2));
+                color2SelectorImageButton.setBackgroundTintList(ColorStateList.valueOf(color2));
 
                 break;
         }
@@ -393,9 +396,10 @@ public class HomeActivity extends AppCompatActivity
                 int y = (int) motionEvent.getY();
 
                 if (eventAction == MotionEvent.ACTION_DOWN) {
-                    // Toast.makeText(getApplicationContext(), "onTouch Down - Camera", Toast.LENGTH_SHORT).show()
+                    // Log.e(TAG, "onTouch - Action Down");
 
                 } else if (eventAction == MotionEvent.ACTION_UP) {
+                    // Log.e(TAG, "onTouch - Action UP");
 
                     pixelPointerMainView.removeAllViews();
 
@@ -412,12 +416,13 @@ public class HomeActivity extends AppCompatActivity
                         int color = Color.rgb(valueR, valueG, valueB);
 
                         // store to color 1 or 2 according to which is selected
-                        if (selectedChipId == color1Chip.getId())
+                        if (selectedColor == ColorNum.COLOR_1) {
                             color1 = color;
-                        else if (selectedChipId == color2Chip.getId())
+                            color1SelectorImageButton.setBackgroundTintList(ColorStateList.valueOf(color1));
+                        } else {
                             color2 = color;
-
-                        // Toast.makeText(getApplicationContext(), "color1: " + color1 + "\ncolor2: " + color2, Toast.LENGTH_SHORT).show();
+                            color2SelectorImageButton.setBackgroundTintList(ColorStateList.valueOf(color2));
+                        }
 
                         // display color using text
                         int[] colors = {color1, color2};
@@ -432,22 +437,18 @@ public class HomeActivity extends AppCompatActivity
                         Color.RGBToHSV(valueR, valueG, valueB, hsv);
                         float v = hsv[2] * 100;
 
-                        if (selectedChipId == color1Chip.getId())
+                        if (selectedColor == ColorNum.COLOR_1) {
                             color1Slider.setValue(v);
-                        else if (selectedChipId == color2Chip.getId())
+                        } else {
                             color2Slider.setValue(v);
-
+                        }
 
                     } else {
                         Log.d(TAG, "matFrame is Null: ");
                     }
 
-                    //Toast.makeText(getApplicationContext(), "onTouch Up - Camera", Toast.LENGTH_SHORT).show();
-                    String colorChipSelected = selectedChipId == color1Chip.getId() ?
-                            "Color 1 Selected" : "Color 2 Selected";
-                    Toast.makeText(getApplicationContext(), colorChipSelected, Toast.LENGTH_SHORT).show();
-
                 } else if (eventAction == MotionEvent.ACTION_DOWN || eventAction == MotionEvent.ACTION_MOVE) {
+                    // Log.e(TAG, "onTouch - Action UP or Action DOWN");
 
                     int color = 0;
                     if (matFrame != null && y > 0 && x > 0) {
@@ -625,6 +626,7 @@ public class HomeActivity extends AppCompatActivity
         }
         return null;
     }
+
     private void showSaveOptionsDialog() {
         AlertDialog.Builder adb = new AlertDialog.Builder(HomeActivity.this, R.style.Transparent_AlertDialog);
         View view = HomeActivity.this.getLayoutInflater().inflate(R.layout.alert_dialog, null);
@@ -831,6 +833,10 @@ public class HomeActivity extends AppCompatActivity
             lastSlideOffSet = slideOffset;
         }
 
+    }
+
+    private enum ColorNum {
+        COLOR_1, COLOR_2
     }
 
 }

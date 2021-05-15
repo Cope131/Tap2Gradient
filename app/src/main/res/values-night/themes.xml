@@ -30,7 +30,7 @@
         <item name="android:outlineProvider">none</item>
         <item name="android:elevation">0dp</item>
 
-        <item name="icon">@drawable/save_icon</item>
+        <item name="icon">@drawable/ic_save</item>
         <item name="iconSize">20dp</item>
         <item name="iconPadding">10dp</item>
     </style>
@@ -51,7 +51,7 @@
     </style>
 
     <style name="WidgetPictureOptionsChip" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="android:textColor">@color/blue_accent</item>
+        <item name="android:textColor">@color/accent</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textAppearance">@style/ChipTextAppearance</item>
 
@@ -67,7 +67,7 @@
 
         <item name="android:checkable">true</item>
         <item name="checkedIconVisible">true</item>
-        <item name="checkedIconTint">@color/blue_accent</item>
+        <item name="checkedIconTint">@color/accent</item>
 
         <item name="elevation">0dp</item>
         <item name="android:outlineProvider">none</item>
@@ -99,7 +99,7 @@
         <item name="thumbRadius">15dp</item>
         <item name="thumbElevation">0.5dp</item>
 
-        <item name="trackColorActive">@color/blue_accent</item>
+        <item name="trackColorActive">@color/accent</item>
         <item name="trackColorInactive">@color/black_200</item>
         <item name="labelStyle">@style/Label.Tooltip</item>
         <item name="trackHeight">1.2dp</item>
@@ -175,7 +175,7 @@
 
         <item name="android:checkable">true</item>
         <item name="checkedIconVisible">true</item>
-        <item name="checkedIconTint">@color/blue_accent</item>
+        <item name="checkedIconTint">@color/accent</item>
 
         <item name="elevation">0dp</item>
     </style>

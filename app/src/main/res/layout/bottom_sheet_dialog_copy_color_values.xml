@@ -36,7 +36,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_close"
-                android:background="@drawable/close_button_selector" />
+                android:background="@drawable/button_close_selector" />
 
         </RelativeLayout>
 
@@ -114,7 +114,7 @@
                             android:layout_height="42dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector"/>
+                            android:background="@drawable/button_copy_selector"/>
 
                     </RelativeLayout>
 
@@ -159,7 +159,7 @@
                             android:layout_height="42dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector"/>
+                            android:background="@drawable/button_copy_selector"/>
 
                     </RelativeLayout>
 
@@ -204,7 +204,7 @@
                             android:layout_height="42dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector" />
+                            android:background="@drawable/button_copy_selector" />
 
                     </RelativeLayout>
 
@@ -291,7 +291,7 @@
                             android:layout_height="38dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector"/>
+                            android:background="@drawable/button_copy_selector"/>
 
                     </RelativeLayout>
 
@@ -336,7 +336,7 @@
                             android:layout_height="38dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector"/>
+                            android:background="@drawable/button_copy_selector"/>
 
                     </RelativeLayout>
 
@@ -381,7 +381,7 @@
                             android:layout_height="38dp"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_copy_value"
-                            android:background="@drawable/copy_button_selector"/>
+                            android:background="@drawable/button_copy_selector"/>
 
                     </RelativeLayout>
 
@@ -405,7 +405,7 @@
             android:background="@drawable/button_selector"
             android:text="Copy All"
             android:textSize="16sp"
-            android:textColor="@color/blue_accent"
+            android:textColor="@color/accent"
             android:textFontWeight="600"
             android:elevation="0dp"
             android:outlineProvider="none"/>

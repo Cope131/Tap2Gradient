@@ -29,6 +29,10 @@
 
     <color name="blue_dark">#2E3033</color>
 
+    <!-- Current Used Accent -->
+    <color name="accent">#0BE4E9</color>
+    <color name="light_accent">#EBFFFF</color>
+
     <!-- Classic Accent -->
     <color name="blue_accent">#0BE4E9</color>
     <color name="blue_light_accent">#EBFFFF</color>
